@@ -1,0 +1,53 @@
+\chapter{引言}
+\label{cha:intro}
+
+  
+\section{液体活检与精准医疗}
+\label{sec:first}
+
+~\ref{fig:liquid}
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.6\textwidth]{exRNA_source}
+    \caption{液体活检}
+    \label{fig:liquid}
+\end{figure}
+
+\section{exRNA作为生物标志物}
+\label{sec:second}
+
+\section{特征选择与机器学习算法}
+\label{sec:third}
+
+
+
+
+
+
+
+
+\section{研究计划概述}
+\label{sec:fifth}
+
+exSEEK的主要功能如~\ref{fig:pipeline}所示，包括测序数据的清洗，质量控制，序列比对映射，对于小RNA数据我们专门探索了顺序比对的方法。对于构建表达矩阵(基因计数矩阵)，我们针对细胞外RNA测序数据的特点，设计了结构域检测的算法，检测lncRNA、mRNA、snoRNA、snRNA、srpRNA、tRNA、Y RNA等RNA的结构域特征用于构建表达矩阵，并与miRNA合并产生计数矩阵，
+之后我们使用一系列的矩阵处理模型对表达矩阵进行测序深度的归一化以及去除批次效应，并且使用针对性的指标衡量矩阵处理的效果。最后我们会构建特征选择的流程来挑选可以用于癌症分类的潜在生物标志物，并且对其分类效果进行评估。
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.8\textwidth]{pipeline}
+    \caption{exSEEK流程图}
+    \label{fig:pipeline}
+\end{figure}
+
+
+\section{选题的意义和价值}
+\label{sec:fourth}
+
+
+
+%~\ref{fig:data_issues}
+%\begin{figure}[H] % use float package if you want it here
+%    \centering
+%    \includegraphics[width = 0.95\textwidth]{data_issues}
+%    \caption{exRNA-seq数据分析中的挑战}
+%    \label{fig:data_issues}
+%\end{figure}

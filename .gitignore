@@ -12,7 +12,6 @@ shuji.pdf
 *.hd
 
 ## Core latex/pdflatex auxiliary files:
-*.doc
 *.aux
 *.lof
 *.log

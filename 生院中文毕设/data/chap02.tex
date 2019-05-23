@@ -5,8 +5,8 @@
 \label{sec:first}
 
 \subsection{exRNA数据收集}
-我们收集整理了实验室自产的一套和两套发表的exRNA-seq数据，为了后续方便，我们称细胞外游离的RNA测序数据为cfRNA-seq，外泌体的RNA测序数据为exoRNA-seq. 同时我们用L(long)和S(small)区分长RNA和小RNA测序数据。一共四种主要的数据类型: S-cfRNA-seq, S-exoRNA-seq, L-cfRNA-seq, L-exoRNAs-eq. 我们收集的数据的具体信息如下：S-exoRNA-seq 数据来自于 GEO 数据库中收录的 GSE71008 (\cite{yuan2016plasma})，包含健康供体（healthy donor, HD）的 50 个，结直肠癌100 个（colorectal cancer, CRC）样本，前列腺癌（prostate adenocarcinoma, PRAD）36 个。  S-cfRNA-seq ，我们整理了实验室内部产生的数据GSE123972 (\cite{tan2019noncoding}) 以及GSE113994(\cite{max2018human})，GSE53080(\cite{giraldez2018comprehensive}) 和 GSE94582(\cite{akat2014comparative})；GSE123973 有可用的肝癌（hepatocellular carcinoma, HCC） 样本30例，其中包括早期肝癌(HCC stageA)16个，健康供体（HD）的 13 个样本。 GSE113994包含53健康供体，GSE53080包含17健康供体，GSE94582包含20健康供体。对于 L-exoRNA-seq 数据，我们收集exoRBase数据库(\cite{li2017exorbase})中的数据，其源于多个实验室的合作，包括肝癌样本14个，结肠癌样本12个，胰腺癌样本14个和健康供体32个。
-数据总结如~\ref{tab:exRNAsumtable}所示
+我们收集整理了实验室自产的一套和两套发表的exRNA-seq数据，为了后续方便，我们称细胞外游离的RNA测序数据为cfRNA-seq，外泌体的RNA测序数据为exoRNA-seq. 同时我们用L(long)和S(small)区分长RNA和小RNA测序数据。一共四种主要的数据类型: S-cfRNA-seq, S-exoRNA-seq, L-cfRNA-seq, L-exoRNAs-eq. 我们收集的数据的具体信息如下：S-exoRNA-seq 数据来自于 GEO 数据库中收录的 GSE71008 （\cite{yuan2016plasma}），包含健康供体（healthy donor, HD）的 50 个，结直肠癌100 个（colorectal cancer, CRC）样本，前列腺癌（prostate adenocarcinoma, PRAD）36 个。  S-cfRNA-seq ，我们整理了实验室内部产生的数据GSE123972 （\cite{tan2019noncoding}） 以及GSE113994（\cite{max2018human}），GSE53080（\cite{giraldez2018comprehensive}） 和 GSE94582（\cite{akat2014comparative}）；GSE123973 有可用的肝癌（hepatocellular carcinoma, HCC） 样本30例，其中包括早期肝癌(HCC stageA)16个，健康供体（HD）的 13 个样本。 GSE113994包含53健康供体，GSE53080包含17健康供体，GSE94582包含20健康供体。对于 L-exoRNA-seq 数据，我们收集exoRBase数据库（\cite{li2017exorbase}）中的数据，其源于多个实验室的合作，包括肝癌样本14个，结肠癌样本12个，胰腺癌样本14个和健康供体32个。
+数据总结如表~\ref{tab:exRNAsumtable}所示
 
 \begin{table}[htb]
   \centering
@@ -23,14 +23,14 @@
       S-cfRNA-seq & GSE53080 & HD & 17\\
       S-cfRNA-seq & GSE94582 & HD & 20\\
       L-exoRNA-seq & exoRBase & \textbf{HCC}, CRC, PRAD, HD & 20\\
-      % (\cite{yuan2016plasma}) (\cite{tan2019noncoding}) (\cite{max2018human}) (\cite{giraldez2018comprehensive}) (\cite{akat2014comparative}) (\cite{li2017exorbase})
+      % （\cite{yuan2016plasma}） （\cite{tan2019noncoding}） （\cite{max2018human}） （\cite{giraldez2018comprehensive}） （\cite{akat2014comparative}） （\cite{li2017exorbase}）
       \bottomrule[1.5pt]
     \end{tabularx}
   \end{minipage}
 \end{table}
 
 \paragraph{exRNA测序数据的处理}
-针对exRNA数据微量性的特点，我们转门设计了小RNA测序数据的顺序比对方法，确定了其比对的先后顺序。完整的流程如~\ref{fig:reads_processing}所示。包括数据清洗，质量控制，顺序比对（针对小RNA）或序列比对，以及构建
+针对exRNA数据微量性的特点，我们转门设计了小RNA测序数据的顺序比对方法，确定了其比对的先后顺序。完整的流程如图~\ref{fig:reads_processing}所示。包括数据清洗，质量控制，顺序比对（针对小RNA）或序列比对，以及构建
 
 \begin{figure}[H] % use float package if you want it here
     \centering
@@ -41,7 +41,7 @@
 
 \subsection{长exRNA测序数据的处理}
 
-~\ref{fig:exorbase_basic} ，数据来源为exoRBase。 (A) 不同RNA映射比例的饼图; (B) 不同RNA的长度分布的三维条形图;
+图~\ref{fig:exorbase_basic} ，数据来源为exoRBase。 (A) 不同RNA映射比例的饼图; (B) 不同RNA的长度分布的三维条形图;
 (C) 不同RNA的映射比例的箱线图 (D) 每个样本各种RNA映射比例的叠加条形图。
 \begin{figure}[H] % use float package if you want it here
     \centering
@@ -191,7 +191,7 @@
 \section{表达矩阵的处理}
 \label{sec:third}
 
-在矩阵处理部分，我们进行了如~\ref{fig:mx_process_pipe}的顺序处理过程，包括过滤与归责，样本库大小归一化(测序深度归一化)，去除批次效应等步骤。我们将不同的处理方法进行组合，并对每个步骤进行了单独的和综合的评估，使用了非监督聚类准确性(unsupervised clustering accuracy, UCA)
+在矩阵处理部分，我们进行了如图~\ref{fig:mx_process_pipe}的顺序处理过程，包括过滤与归责，样本库大小归一化(测序深度归一化)，去除批次效应等步骤。我们将不同的处理方法进行组合，并对每个步骤进行了单独的和综合的评估，使用了非监督聚类准确性(unsupervised clustering accuracy, UCA)
 和m-K最近邻 (m-K-nearest neighbor, mKNN)两个指标综合选取最佳的矩阵处理方法组合。本部分的矩阵处理代码由R语言实现，评估指标由python实现。
 
 
@@ -207,7 +207,7 @@
 
 \subsection{样本库大小归一化}
 
-对样本库大小（library size）进行归一化的原因在于实验中不同样本的计数总数会受到实验时的诸多因素影响（如PCR扩增倍数，测序深度等），造成样本间同种基因的计数有差异。对于RNA$-$seq数据，我们通常认为这种影响因素对于每个基因是等比例的，然而对于量较少的exRNA-seq以及单细胞测序，也有理论认为对于样本内部的不同基因，也应该使用不同的归一化因子，单细胞测序的归一化方法之一SCnorm(\cite{bacher2017scnorm})即采取这种策略。基本的样本库归一化方法是将每个样本的所有基因的原始reads各乘以一个归一化因子，保证各个样本的样本库大小在归一化后一致。我们选择了多种归一化方法：CPM,  CPM\_top, TMM, RLE, UQ, SCnorm.
+对样本库大小（library size）进行归一化的原因在于实验中不同样本的计数总数会受到实验时的诸多因素影响（如PCR扩增倍数，测序深度等），造成样本间同种基因的计数有差异。对于RNA$-$seq数据，我们通常认为这种影响因素对于每个基因是等比例的，然而对于量较少的exRNA-seq以及单细胞测序，也有理论认为对于样本内部的不同基因，也应该使用不同的归一化因子，单细胞测序的归一化方法之一SCnorm（\cite{bacher2017scnorm}）即采取这种策略。基本的样本库归一化方法是将每个样本的所有基因的原始reads各乘以一个归一化因子，保证各个样本的样本库大小在归一化后一致。我们选择了多种归一化方法：CPM,  CPM\_top, TMM, RLE, UQ, SCnorm.
 
 \paragraph{样本库大小归一化方法原理简介}\mbox{}\\
 
@@ -215,14 +215,14 @@ CPM（counts per million）通过对样本的所有reads求和得到样本库大
 
 我们对CPM做了一些修改，CPM\_top算法对于top20表达量的基因和其余基因分别使用不同的归一化因子进行归一化，这是考虑到exRNA-seq数据中表达量前20的基因可以占据reads总数的50\%以上，分别归一化可以避免表达量极大的基因对其余基因的分布的影响，这和SCnorm的想法比较类似。
 
-UQ（upper quartile）(\cite{love2014moderated})对 CPM 进行一些修改，与CPM\_top类似。UQ用在至少一个样本中表达的基因 reads 数的上四分位数(75\%分位数)来作为样本库大小进行归一化。这样可以避免一些表达量特别大的基因对剩余基因的影响，一定程度上避免差异表达分析的假阳性。
+UQ（upper quartile）（\cite{love2014moderated}）对 CPM 进行一些修改，与CPM\_top类似。UQ用在至少一个样本中表达的基因 reads 数的上四分位数(75\%分位数)来作为样本库大小进行归一化。这样可以避免一些表达量特别大的基因对剩余基因的影响，一定程度上避免差异表达分析的假阳性。
 
-TMM（trimmed mean of M-values）(\cite{diaz2006gene})略微复杂。对每个样本，把其他样本作为比较样本，计算一个系数。去掉样本中表达值的很大的极端值，每个比较样本与本样本分别计算对数比例，加权求和得到每个样本各自的归一化因子。可以看出如果基因没有差异表达，那么系数应该接近1，事实上大多数基因确实是没有差异表达的，因此TMM可以用于校正技术因素导致的系数偏离1的情况。
+TMM（trimmed mean of M-values）（\cite{diaz2006gene}）略微复杂。对每个样本，把其他样本作为比较样本，计算一个系数。去掉样本中表达值的很大的极端值，每个比较样本与本样本分别计算对数比例，加权求和得到每个样本各自的归一化因子。可以看出如果基因没有差异表达，那么系数应该接近1，事实上大多数基因确实是没有差异表达的，因此TMM可以用于校正技术因素导致的系数偏离1的情况。
 
-RLE（relative log expression）(\cite{anders2012detecting})对每个基因，首先计算每个基因的样本间几何平均，对每个样本，计算每个基因的reads 数与对应的几何平均的比值，取每个样本所有比值的中位数作为RLE系数。RLE也假设了大多数基因是没有差异表达的，因此RLE也接近1，偏离1的RLE系数可以被用来做样本库大小的归一化。
+RLE（relative log expression）（\cite{anders2012detecting}）对每个基因，首先计算每个基因的样本间几何平均，对每个样本，计算每个基因的reads 数与对应的几何平均的比值，取每个样本所有比值的中位数作为RLE系数。RLE也假设了大多数基因是没有差异表达的，因此RLE也接近1，偏离1的RLE系数可以被用来做样本库大小的归一化。
 
 
-RLE 图可以用于显示样本库大小归一化前后的变化。RLE图和RLE归一化思想是一样的，对于每个样本，如果大多数基因没有差异表达，上述的RLE系数，即每个样本的reads数与基因跨样本几何平均的比值的中位数应该接近0。~\ref{fig:rle}展示了使用RLE作为归一化方法的效果：从中可以看到在归一化之前，数据GSE123972的RLE系数明显大于0，不同的数据集的测序深度很不一样，经过计算可以得到所有数据的RLE系数相对于0的偏离为4.25，归一化之后不同数据的异质性明显减小，而且variance分数明显降低为0.45，体现出RLE具有较好的归一化效果。
+RLE 图可以用于显示样本库大小归一化前后的变化。RLE图和RLE归一化思想是一样的，对于每个样本，如果大多数基因没有差异表达，上述的RLE系数，即每个样本的reads数与基因跨样本几何平均的比值的中位数应该接近0。图~\ref{fig:rle}展示了使用RLE作为归一化方法的效果：从中可以看到在归一化之前，数据GSE123972的RLE系数明显大于0，不同的数据集的测序深度很不一样，经过计算可以得到所有数据的RLE系数相对于0的偏离为4.25，归一化之后不同数据的异质性明显减小，而且variance分数明显降低为0.45，体现出RLE具有较好的归一化效果。
 
 
 
@@ -237,7 +237,7 @@ RLE 图可以用于显示样本库大小归一化前后的变化。RLE图和RLE�
 
 \subsection{去除批次效应}
 
-批次效应指人为引入的技术差异（technical variance）使得样本不按照真正的类别信息聚类，而是向人为造成的批次偏移，如不同的实验日期，不同的建库大小，胶选择长度等都会造成批次效应。我们依据数据来源文献中所指明的批次效应，采用了RUV(\cite{risso2014normalization})，ComBat(\cite{chen2011removing})，Limma(\cite{ritchie2015limma})等方法进行批次效应的去除。并且使用m-K最近邻 (m-K-nearest neighbor, mKNN)指标来衡量批次效应的去除效果。
+批次效应指人为引入的技术差异（technical variance）使得样本不按照真正的类别信息聚类，而是向人为造成的批次偏移，如不同的实验日期，不同的建库大小，胶选择长度等都会造成批次效应。我们依据数据来源文献中所指明的批次效应，采用了RUV（\cite{risso2014normalization}），ComBat（\cite{chen2011removing}），Limma（\cite{ritchie2015limma}）等方法进行批次效应的去除。并且使用m-K最近邻 (m-K-nearest neighbor, mKNN)指标来衡量批次效应的去除效果。
 
 
 
@@ -251,8 +251,8 @@ RUV适用于批次效应信息不可获得或者不希望按照已有的批次�
 
 对于批次信息存在且与样本类别信息差异不大的情况，可以使用以上三种批次效应去除方法，以及不使用批次效应去除方法作为对比，否则可以使用RUV对不输入批次效应信息的数据进行批次效应去除。
 
-批次效应的去除可以通过降维可视化的方式鉴别，我们将在~\ref{fig:matrix_processing_metric}
-展示，直观上来看，同一批次的样本越分散，也就是不同批次的样本混合越均匀，则批次效应的影响越小，去除批次效应的效果越好。另一种展示方法通过方差分解（variance decomposition analysis）。将表达值作为因变量，可以将各种因素分别作为自变量回归，如样本信息，批次信息，样本库大小等。对于每个基因作为因变量，都可以计算出不同的自变量解释的方差与总方差的比值，对于每一种自变量，都可以画出来其对每个基因的方差贡献比的分布曲线。~\ref{fig:batch_correction}所示，以批次效应信息作为自变量时，去除批次效应后，方差贡献分布曲线明显左移（蓝线到红线），说明批次效应对基因表达值的影响变小。而以样本类别信息作为自变量时，虽然方差贡献分布曲线也有左移，但是左移相对于批次效应的曲线明显较小，可以认为我们在去除批次效应的同时较好地保留了不同类别样本的差异性，即生物学效应带来的组间差异。
+批次效应的去除可以通过降维可视化的方式鉴别，我们将在图~\ref{fig:matrix_processing_metric}
+展示，直观上来看，同一批次的样本越分散，也就是不同批次的样本混合越均匀，则批次效应的影响越小，去除批次效应的效果越好。另一种展示方法通过方差分解（variance decomposition analysis）。将表达值作为因变量，可以将各种因素分别作为自变量回归，如样本信息，批次信息，样本库大小等。对于每个基因作为因变量，都可以计算出不同的自变量解释的方差与总方差的比值，对于每一种自变量，都可以画出来其对每个基因的方差贡献比的分布曲线。图~\ref{fig:batch_correction}所示，以批次效应信息作为自变量时，去除批次效应后，方差贡献分布曲线明显左移（蓝线到红线），说明批次效应对基因表达值的影响变小。而以样本类别信息作为自变量时，虽然方差贡献分布曲线也有左移，但是左移相对于批次效应的曲线明显较小，可以认为我们在去除批次效应的同时较好地保留了不同类别样本的差异性，即生物学效应带来的组间差异。
 
 \begin{figure}[H] % use float package if you want it here
     \centering
@@ -265,19 +265,19 @@ RUV适用于批次效应信息不可获得或者不希望按照已有的批次�
 
 
 
-非监督聚类准确性(unsupervised clustering accuracy, UCA)(\cite{lopez2018deep})，由一篇单细胞领域研究中首次适用，用于衡量聚类的效果，作为PCA和t-SNE等降维可视化分析的量化评估，可以使我们预先判断当前处理效果下数据的大致分类效果。
-UCA首先只用K-means(\cite{jain1988algorithms})或者KNN(\cite{cover1967nearest})作为聚类的方法，由于是非监督聚类，还需要使用线性分配的算法如匈牙利算法(\cite{linearassign})将聚类标签与真实标签进行匹配。此时该问题可以看做一个有标签的分类问题，计算出分类的准确率即为非监督聚类准确性。
+非监督聚类准确性(unsupervised clustering accuracy, UCA)（\cite{lopez2018deep}），由一篇单细胞领域研究中首次适用，用于衡量聚类的效果，作为PCA和t-SNE等降维可视化分析的量化评估，可以使我们预先判断当前处理效果下数据的大致分类效果。
+UCA首先只用K-means（\cite{jain1988algorithms}）或者KNN（\cite{cover1967nearest}）作为聚类的方法，由于是非监督聚类，还需要使用线性分配的算法如匈牙利算法（\cite{linearassign}）将聚类标签与真实标签进行匹配。此时该问题可以看做一个有标签的分类问题，计算出分类的准确率即为非监督聚类准确性。
 对于多种不同的聚类度量指标，我们发现UCA和有监督的分类度量指标AUC具有最强的相关性，因此采用非监督聚类准确性指标作为矩阵处理效果的度量之一。
 
-为了更好地衡量批次效应的严重性以及批次效应去除效果，我们参考了过去的指标如对齐分数(alignment score)(\cite{butler2018integrating})，和kBET(\cite{buttner2017assessment})两个研究。对齐分数虽然计算简单，但是只适用于二分类标签，kBET使用时会遇到受到随机效应影响而导致极端值附近的结果不够稳定的情况。
-为此我们提出了m-K最近邻 (m-K-nearest neighbor, mKNN)指标， 公式如式~(\ref{eq:mknn})所示，其中 $\bar x_b, k, N_b, N, B$ 分别表示：批次为b的样本周围同类批次的样本平均个数，自主定义的最近邻取样数，批次为b的样本总数，所有样本的总数以及批次的种类数。利用mKNN指标，我们可以逐批次逐样本地衡量其批次效应的严重性，
+为了更好地衡量批次效应的严重性以及批次效应去除效果，我们参考了过去的指标如对齐分数(alignment score)（\cite{butler2018integrating}），和kBET（\cite{buttner2017assessment}）两个研究。对齐分数虽然计算简单，但是只适用于二分类标签，kBET使用时会遇到受到随机效应影响而导致极端值附近的结果不够稳定的情况。
+为此我们提出了m-K最近邻 (m-K-nearest neighbor, mKNN)指标， 公式如式~(\ref{eq:mknn}）所示，其中 $\bar x_b, k, N_b, N, B$ 分别表示：批次为b的样本周围同类批次的样本平均个数，自主定义的最近邻取样数，批次为b的样本总数，所有样本的总数以及批次的种类数。利用mKNN指标，我们可以逐批次逐样本地衡量其批次效应的严重性，
 批次效应越严重，则分子中的$\bar x_b$越大，相应的整个指标越大。为了更好地表示“去除批次效应的效果”，我们使用1-mKNN作为去除批次效应效果的指标。
 \begin{equation}
 \label{eq:mknn}
 \frac { 1 } { B } \sum _ { b = 1 } ^ { B } \frac { \overline { x } _ { b } - k N _ { b } / ( N - 1 ) } { \min \left( k , N _ { b } \right) - k N _ { b } / ( N - 1 ) }
 \end{equation}
 
-UCA和mKNN指标均为$0\sim 1$，数值越大代表聚类效果越好以及批次效应的影响越小。因此我们统一地考虑两个指标，将矩阵处理方法的组合（即测序深度归一化以及去除批次效应方法的组合）加以统一的评估。~\ref{fig:matrix_processing_metric}中每一个点表示一种矩阵
+UCA和mKNN指标均为$0\sim 1$，数值越大代表聚类效果越好以及批次效应的影响越小。因此我们统一地考虑两个指标，将矩阵处理方法的组合（即测序深度归一化以及去除批次效应方法的组合）加以统一的评估。图~\ref{fig:matrix_processing_metric}中每一个点表示一种矩阵
 处理方法的组合。越靠近右上角的指标代表矩阵处理效果越好。如图所示，我们可以选择RLE作为测序深度归一化加上Limma作为去除批次效应的方法组合。对于该方法组合，我们还是用了PCA对矩阵处理前后的数据进行了可视化，PCA可以用于降维，选择方差贡献最大的两个主成分表示到二维平面上，点的颜色表示批次，性状表示类别信息。
 不管是视觉上观察可以看到不同批次的点更好的混在了一起，还是从两个指标的变化（$\text{UCA}:0.519 \rightarrow 0.692; \text{mKNN}:0.055 \rightarrow 0.792$)上，均可以得出矩阵处理方法较好地完成了测序深度归一化以及批次效应去除的任务的结论。
 
@@ -299,21 +299,21 @@ UCA和mKNN指标均为$0\sim 1$，数值越大代表聚类效果越好以及批�
 
 
 % 讨论deseq的基本原理，注意表达要修改
-我们使用DESeq2包进行差异表达分析，值得注意的是DESeq2专门要求输入的矩阵必须是基因计数矩阵，也就是未经标准化和归一化的表达矩阵(un-normalized counts)(\cite{love2014moderated}). 因为这样的矩阵具有最多的信息和准确性，DESeq2在内部会自动完成归一化的工作。
+我们使用DESeq2包进行差异表达分析，值得注意的是DESeq2专门要求输入的矩阵必须是基因计数矩阵，也就是未经标准化和归一化的表达矩阵(un-normalized counts)（\cite{love2014moderated}）. 因为这样的矩阵具有最多的信息和准确性，DESeq2在内部会自动完成归一化的工作。
 
 DESeq2为了比较两组样本之间的计数差异建立了一个模型。该模型包含以下参数：（1）归一化参数，至少可以归一化库大小的差异; （2）方差参数，也被成为分散系数（dispersion）; （3）表示组间差异的参数。DESeq2使用与原始DESeq相同的方法拟合（1）。拟合（2）分两步：首先找到使似然(likelihood)最大的参数值，即完成最大似然估计。查找所有的基因表达值，并将这些值向中间值移动，移动的量由贝叶斯模型给定：如果基因的信息较低，则值更多地移动到中间，如果基因的信息很大，则值移动很少。使用与（2）中使用的相同的技术拟合（3）。 （3）的值是最终需要得到的输出，找到一组组间差异高于某个数值的基因集合。这个阈值一般由错误发现率(False Discovery Rate, FDR)规定，一般取从小到大排最小的十个FDR基因作为差异表达基因。
 
-对于差异表达基因的选取，这里我们使用一个改进的指标以替代FDR，该指标如~\ref{equ:demetric}所示，可以综合性考虑FDR和fold change，更加完善。
+对于差异表达基因的选取，这里我们使用一个改进的指标以替代FDR，该指标如公式~\ref{equ:demetric}所示，可以综合性考虑FDR和fold change，更加完善。
 
 \begin{equation}\label{equ:demetric}
-  \pi = \| \log _ { 2 } F C | \cdot \left( - \log _ { 10 } \mathrm { FDR } \right)
+  \pi = \Vert \log _ { 2 } F C \Vert \cdot \left( - \log _ { 10 } \mathrm { FDR } \right)
 \end{equation}
 
 
 %compare counts between two groups. We build a model for the observed counts. This model has some parameters: (1) a normalization parameter, for differences in library size at least, or it can be extended by other software; (2) a variance parameter, called dispersion; (3) parameters representing the group differences. Fit (1) using the same method from the original DESeq. Fit (2) in two steps: first find the value of the parameter that makes the  likelihood largest, which iscalled maximum likelihood estimation. Look at all the values from all of the genes and move these values towards a middle value. Bayes theorem guides the amount of movement for each gene: if the information for the gene is low, the value is moved more to the middle, if the information for the gene is high, the value is moved very little. Fit (3) using the same technique as used for (2). The values for (3) are a useful final product, as are sets of genes where the group differences are likely to be above a threshold (zero or otherwise). These sets are defined by their false discovery rate.
 
 %TODO 展示基本的DE结果并简单讨论
-使用DESeq2对原始的基因计数矩阵进行分析，可以得到如~\ref{fig:lulab_de}和~\ref{fig:scirep_de}的结果。
+使用DESeq2对原始的基因计数矩阵进行分析，可以得到如图~\ref{fig:lulab_de}和图~\ref{fig:scirep_de}的结果。
 
 
 对于~\ref{fig:lulab_de}，我们使用S-cfRNA-seq数据，癌症类型分别为肝癌和早期肝癌。将其分别与正常样本比较，可以分别找出可以区分正常样本与肝癌以及正常样本与早期肝癌的差异基因。(A) 表示每个基因的对数fold change和对数调整后p值的火山图，图中红色的点为差异表达的基因，越靠近右上和左上的基因其差异表达越明显; (B) 前十个差异表达基因的fold change, 表达值以及对数调整后p值; (C) 挑选出的差异表达基因的热图以显示其对于癌症和正常样本的分类效果。的分类效果。
@@ -324,7 +324,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
     \label{fig:lulab_de}
 \end{figure}
 
-对于~\ref{fig:scirep_de}，我们使用S-exoRNA-seq数据，癌症类型分别为结肠癌和早期结肠癌。图的具体信息与~\ref{fig:lulab_de}表示的类似。
+对于图~\ref{fig:scirep_de}，我们使用S-exoRNA-seq数据，癌症类型分别为结肠癌和早期结肠癌。图的具体信息与图~\ref{fig:lulab_de}表示的类似。
 \begin{figure}[H] % use float package if you want it here
     \centering
     \includegraphics[width = 0.8\textwidth]{scirep_de}
@@ -336,7 +336,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 
 \subsection{特征选择策略与机器学习模型}
 
-\paragraph{特征选择框架}
+
 
 
 %~\ref{fig:fs_frame}
@@ -347,39 +347,48 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
  %   \label{fig:fs_frame}
 %\end{figure}
 
-特征选择算法~\ref{alg:fs_algorithm}
+特征选择方法通常使用一些经典的机器学习模型用于将不同的样本类别进行区分（如区分肝癌和正常样本）。通过优化机器学习模型使其更好地区分组间差异，获得更好的分类效果的同时，我们往往可以分析模型的参数，得到每个特征对分类效果的贡献，即权重。通过寻找权重大的特征，我们可以找到对模型分类贡献最大的基因，也就是我们希望寻找的潜在的生物标志物。与差异表达的逐个基因判断其贡献相比，机器学习模型的建模假设可以更复杂，可以综合考虑基因间的关联性，甚至建立非线性的模型刻画这种关系，因此对数据有更好的建模效果，往往也可以获得更好的分类效果。然而由于模型的参数更复杂，对于数据的表示能力更强，往往也会带来严重的过拟合问题（~\cite{domingos2012few}）。对于exRNA-seq数据的标志物发掘，我们还需要考虑实际的生物学意义，寻找稳定的，解释性强的特征，这要求我们更好地固定机器学习模型，减少特征选择算法的随机性。针对这些考虑，我们设计了如下的特征选择算法：
+
+\paragraph{特征选择算法}
+
+\begin{algorithm}
+  \caption{稳健的特征选择算法}\label{alg:fs_algorithm}
+  \begin{algorithmic}[1]
+  \STATE Scale each feature independently using robust normalization;
+  \FOR{feature\_num $k \in [1,10], 20, 30, 40, 50$}
+  \STATE Random select 90\% samples for 50 times;
+  \STATE Run a classifier (Random Forest, Logistic Regression or Linear SVM) to select features based on feature importance. 
+    \FOR{each classifier $\in$ [Random Forest, Logistic Regression or Linear SVM]}
+    \STATE Optimize classifier's hyper-parameters by 5-fold cross-validation;
+    \ENDFOR
+  \STATE Select top k features that are recurrently selected across resampling runs;
+  \STATE Calculate AUC mean;
+  \ENDFOR
+  \STATE Rank processing method by AUC, select the best processing method;
+  \STATE Select union of features in different feature\_num setting. Refit by selecting $i \in [1,10]$ features and calculate feature importance.
+  \end{algorithmic}
+  \end{algorithm}
+
+  
+特征选择的详细算法可以由~\ref{alg:fs_algorithm}得到。首先，不同于DESeq2要求输入未经归一化的表达值，特征选择算法可以输入经过了归一化和去除批次效应的表达值。由于我们只对样本进行了归一化，在使用机器学习模型进行特征选择时，一般还要对特征进行逐个标准化。公式~\ref{eq:robustnorm}表示robust normalization的具体做法，对于每个特征，通过减去其中位数，除以四分间距（IQR: Interquartile Range），即可得到标准化后的表达值，使用四分间距作为分母而不是标准差，可以有效避免极端值对标准化的影响，具有更强的鲁棒性。
+\begin{equation}\label{eq:robustnorm}
+  x ^ { \prime } = \frac { x - \text { median } ( x ) } {  x_{\text{75th}} - x_{\text{25th}} }
+\end{equation}
 
 %feature selection算法
 
-\begin{algorithm}
-\caption{稳健的特征选择算法}\label{alg:fs_algorithm}
-\begin{algorithmic}[1]
-\STATE Scale each feature independently using robust normalization;
-\FOR{feature\_num $k \in [1,10], 20, 30, 40, 50$}
-\STATE Random select 90\% samples for 50 times;
-\STATE Run a classifier (Random Forest, Logistic Regression or Linear SVM) to select features based on feature importance. 
-	\FOR{each classifier $\in$ [Random Forest, Logistic Regression or Linear SVM]}
-	\STATE Optimize classifier's hyper-parameters by 5-fold cross-validation;
-	\ENDFOR
-\STATE Select top k features that are recurrently selected across resampling runs;
-\STATE Calculate AUC mean;
-\ENDFOR
-\STATE Rank processing method by AUC, select the best processing method;
-\STATE Select union of features in different feature\_num setting. Refit by selecting $i \in [1,10]$ features and calculate feature importance.
-\end{algorithmic}
-\end{algorithm}
 
 
 
 
 \paragraph{机器学习模型}
-在特征选择框架中我们可以选择多种机器学习模型，包括逻辑斯谛回归(\cite{kleinbaum2002logistic})，支持向量机(\cite{scholkopf2001learning})，随机森林(\cite{liaw2002classification})等。
+在特征选择框架中我们可以选择多种机器学习模型，包括逻辑斯谛回归（\cite{kleinbaum2002logistic}），支持向量机（\cite{scholkopf2001learning}），随机森林（\cite{liaw2002classification}）等。
 以逻辑斯谛回归为例，对于二分类问题，逻辑斯谛回归的决策模型如公式~\ref{equ:logistic}所示，其中$x$为表达矩阵，$\beta$为逻辑斯谛回归中线性模型的权重向量，$\beta_0$为偏置项。公式~\ref{equ:logistic}表示输入为$x$时模型判断样本标签为1的概率。若设患癌症样本的标签为1，则代表该样本为癌症患者的概率。
 \begin{equation}\label{equ:logistic}
     P ( Y = 1 | X = x ) = \frac { \exp \left( \beta _ { 0 } + x ^ { T } \beta \right) } { 1 + \exp \left( \beta _ { 0 } + x ^ { T } \beta \right) }
 \end{equation}
 
-类似地可以得到多分类的逻辑斯谛回归如公式~\ref{equ:multilogistic}
+类似地可以得到多分类的逻辑斯谛回归如公式~\ref{equ:multilogistic}。当逻辑斯蒂回归模型获得数据输入，进行了训练后，为了最大化分类正确的概率，模型会内部优化出$\beta_0, \beta$的最优值，通过寻找$| \beta |$最大的那些值，即可找到我们希望寻找的，对于分类最有效的特征。
 
 
 \begin{subequations}\label{equ:multilogistic}
@@ -391,12 +400,12 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 
 \subsection{特征选择的分类效果和稳健性评估}
 
-Kuncheva index公式如式~(\ref{eq:ki})，其中 $f_i, f_j$ 为两次挑选的特征，$d, N$ 分别为一次挑选的特征数和总特征数量。
+Kuncheva index公式如式~(\ref{eq:ki}），其中 $f_i, f_j$ 为两次挑选的特征，$d, N$ 分别为一次挑选的特征数和总特征数量。
 \begin{equation}\label{eq:ki}
 \mathrm { KI } \left( f _ { i } , f _ { j } \right) = \frac { \left| f _ { i } \cap f _ { j } \right| N - d ^ { 2 } }{ d N - d ^ { 2 } } = \frac { \left| f _ { i } \cap f _ { j } \right| - d ^ { 2 } / N } { d - d ^ { 2 } / N }
 \end{equation}
 
-若做K次采样，均采取不放回的策略时，可以获得平均KI的公式如式~(\ref{eq:aki})，即AKI。
+若做K次采样，均采取不放回的策略时，可以获得平均KI的公式如式~(\ref{eq:aki}），即AKI。
 
 \begin{equation}\label{eq:aki}
 \mathrm { AKI } = \frac { 2 } { M ( M - 1 ) } \sum _ { i = 1 } ^ { M } \sum _ { j = 1 } ^ { M } \mathrm { KI } \left( f _ { i } , f _ { j } \right)
@@ -475,7 +484,7 @@ Kuncheva index公式如式~(\ref{eq:ki})，其中 $f_i, f_j$ 为两次挑选的�
 \subsection{软件基本功能模块与使用}
 
 基于上述的工作我们开发了exSEEK软件，我们使用Snakemake软件包
-(\cite{koster2012snakemake})对分析流程进行控制，
+（\cite{koster2012snakemake}）对分析流程进行控制，
 这是因为处理过程比较复杂，输出文件互相依赖，处理耗时长且
 容易出现断点，使用Snakemake可以保证样本处理的管理有序。
 exSEEK包含了三大模块，如图~\ref{fig:exseekmodule}所示，
@@ -510,7 +519,7 @@ Utilities和Preprocess模块包含了数据前处理，映射和构建表
 
 exSEEK软件还包含有高度可交互以及高度标准化的绘图模块
 ，如图~\ref{fig:jupyter}所示，我们使用jupyter$-$notebook
-(\cite{kluyver2016jupyter})进行绘图模块的构建，
+（\cite{kluyver2016jupyter}）进行绘图模块的构建，
 用户可以交互式地使用绘图模块完成高质量的结果可视化，只
 需要选择相应的参数即可自动地产生类似本文配图的输出结果图。
 

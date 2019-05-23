@@ -29,7 +29,7 @@
 \section{研究计划概述}
 \label{sec:fifth}
 
-exSEEK的主要功能如~\ref{fig:pipeline}所示，包括测序数据的清洗，质量控制，序列比对映射，对于小RNA数据我们专门探索了顺序比对的方法。对于构建表达矩阵(基因计数矩阵)，我们针对细胞外RNA测序数据的特点，设计了结构域检测的算法，检测lncRNA、mRNA、snoRNA、snRNA、srpRNA、tRNA、Y RNA等RNA的结构域特征用于构建表达矩阵，并与miRNA合并产生计数矩阵，
+exSEEK的主要功能如图~\ref{fig:pipeline}所示，包括测序数据的清洗，质量控制，序列比对映射，对于小RNA数据我们专门探索了顺序比对的方法。对于构建表达矩阵(基因计数矩阵)，我们针对细胞外RNA测序数据的特点，设计了结构域检测的算法，检测lncRNA、mRNA、snoRNA、snRNA、srpRNA、tRNA、Y RNA等RNA的结构域特征用于构建表达矩阵，并与miRNA合并产生计数矩阵，
 之后我们使用一系列的矩阵处理模型对表达矩阵进行测序深度的归一化以及去除批次效应，并且使用针对性的指标衡量矩阵处理的效果。最后我们会构建特征选择的流程来挑选可以用于癌症分类的潜在生物标志物，并且对其分类效果进行评估。
 \begin{figure}[H] % use float package if you want it here
     \centering

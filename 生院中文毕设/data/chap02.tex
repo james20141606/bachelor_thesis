@@ -146,7 +146,7 @@
     \caption{结构域大小分布}
   \end{subfigure}
   \caption{不同exRNA和组织数据结构域分布和大小分布}
-  \label{fig:hcc_crc_auc_sum}
+  \label{fig:domain_size}
 \end{figure}
 
 
@@ -355,7 +355,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
   \caption{稳健的特征选择算法}\label{alg:fs_algorithm}
   \begin{algorithmic}[1]
   \STATE Scale each feature independently using robust normalization;
-  \FOR{feature\_num $k \in [1,10], 20, 30, 40, 50$}
+  \FOR{feature\_num $k \in [1,10]$}
   \STATE Random select 90\% samples for 50 times;
   \STATE Run a classifier (Random Forest, Logistic Regression or Linear SVM) to select features based on feature importance. 
     \FOR{each classifier $\in$ [Random Forest, Logistic Regression or Linear SVM]}
@@ -364,16 +364,19 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
   \STATE Select top k features that are recurrently selected across resampling runs;
   \STATE Calculate AUC mean;
   \ENDFOR
-  \STATE Rank processing method by AUC, select the best processing method;
-  \STATE Select union of features in different feature\_num setting. Refit by selecting $i \in [1,10]$ features and calculate feature importance.
+  \STATE Rank processing method by AUC, select the best $k$;
+  %\STATE Select union of features in different feature\_num setting. Refit by selecting $i \in [1,10]$ features and calculate feature importance.
   \end{algorithmic}
   \end{algorithm}
 
   
-特征选择的详细算法可以由~\ref{alg:fs_algorithm}得到。首先，不同于DESeq2要求输入未经归一化的表达值，特征选择算法可以输入经过了归一化和去除批次效应的表达值。由于我们只对样本进行了归一化，在使用机器学习模型进行特征选择时，一般还要对特征进行逐个标准化。公式~\ref{eq:robustnorm}表示robust normalization的具体做法，对于每个特征，通过减去其中位数，除以四分间距（IQR: Interquartile Range），即可得到标准化后的表达值，使用四分间距作为分母而不是标准差，可以有效避免极端值对标准化的影响，具有更强的鲁棒性。
+特征选择的详细算法可以由Algorithm ~\ref{alg:fs_algorithm}得到。首先，不同于DESeq2要求输入未经归一化的表达值，特征选择算法可以输入经过了归一化和去除批次效应的表达值。由于我们只对样本进行了归一化，在使用机器学习模型进行特征选择时，一般还要对特征进行逐个标准化。公式~\ref{eq:robustnorm}表示robust normalization的具体做法，对于每个特征，通过减去其中位数，除以四分间距（IQR: Interquartile Range），即可得到标准化后的表达值，使用四分间距作为分母而不是标准差，可以有效避免极端值对标准化的影响，具有更强的鲁棒性。
 \begin{equation}\label{eq:robustnorm}
-  x ^ { \prime } = \frac { x - \text { median } ( x ) } {  x_{\text{75th}} - x_{\text{25th}} }
+  \text { robust\_scale } \left( x _ { i j } ^ { \prime } \right) = \frac { x _ { i j } - \operatorname { median } _ { k } x _ { i k } } { Q _ { 0.75 } \left( \mathbf { x } _ { i } \right) - Q _ { 0.25 } \left( \mathbf { x } _ { i } \right) }
 \end{equation}
+
+
+接着，由于我们对于最终选择的特征的数量尚未确定，我们首先需要测试挑选的特征的数量，即$k \in [1,10], 20, 30, 40, 50$. 为了挑选出稳健的特征，我们对每个$k$都要进行50轮的测试，挑选在测试中反复出现的特征。由于样本量本身较小，我们没有采用交叉验证(cross validation)的方法，而是直接将全部数据集在每次测试中划分为90\%的训练集和10\%的测试集。在每轮测试中，训练集和测试集的样本都有随机不放回抽样决定，保证训练集中的各类样本的比例与总体类似。我们会使用多种机器学习模型，如逻辑斯谛回归（\cite{kleinbaum2002logistic}），支持向量机（\cite{scholkopf2001learning}），随机森林（\cite{liaw2002classification}）等。在每轮测试，我们都会进行五折的交叉验证(5-fold cross validation)以优化机器学习模型内部的超参数，这些超参数不能由模型自己优化得到，而必须通过人为的选择，比较不同超参数设定时的结果来得到，比如逻辑斯谛回归中的C来控制正则化(regularization)的大小的倒数，C越小代表越强的正则化，随机森林中有树的个数和最大深度作为超参数。最终我们选取50轮测试中重复出现的特征，重新使用机器学习模型选择权重贡献最大的$k$个特征作为最终选择的特征。在50轮的测试中我们可以计算出50轮的平均分类准确度指标：AUC的平均值。之后我们可以选择最佳的$k$，在尽可能保证较高的AUC的情况下减少$k$的值。
 
 %feature selection算法
 
@@ -382,7 +385,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 
 
 \paragraph{机器学习模型}
-在特征选择框架中我们可以选择多种机器学习模型，包括逻辑斯谛回归（\cite{kleinbaum2002logistic}），支持向量机（\cite{scholkopf2001learning}），随机森林（\cite{liaw2002classification}）等。
+在特征选择框架中我们可以选择多种机器学习模型，包括逻辑斯谛回归，支持向量机，随机森林等。
 以逻辑斯谛回归为例，对于二分类问题，逻辑斯谛回归的决策模型如公式~\ref{equ:logistic}所示，其中$x$为表达矩阵，$\beta$为逻辑斯谛回归中线性模型的权重向量，$\beta_0$为偏置项。公式~\ref{equ:logistic}表示输入为$x$时模型判断样本标签为1的概率。若设患癌症样本的标签为1，则代表该样本为癌症患者的概率。
 \begin{equation}\label{equ:logistic}
     P ( Y = 1 | X = x ) = \frac { \exp \left( \beta _ { 0 } + x ^ { T } \beta \right) } { 1 + \exp \left( \beta _ { 0 } + x ^ { T } \beta \right) }
@@ -397,6 +400,8 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
     & P ( Y = K | X = x ) = \frac { 1 } { 1 + \sum _ { l = 1 } ^ { K - 1 } \exp \left( \beta _ { l , 0 } + x ^ { T } \beta _ { l } \right) } , \text { for } k = K
 \end{flalign}
 \end{subequations}
+
+
 
 \subsection{特征选择的分类效果和稳健性评估}
 
@@ -465,6 +470,23 @@ Kuncheva index公式如式~(\ref{eq:ki}），其中 $f_i, f_j$ 为两次挑选�
     \caption{早期肝癌分类的ROC曲线}
     \label{fig:roc_curve}
 \end{figure}
+
+表~\ref{tab:confusion_mx}
+
+\begin{table}[htbp]
+  \centering
+  \caption{混淆矩阵}
+  \label{tab:confusion_mx}
+  \begin{minipage}[t]{0.9\textwidth} 
+\begin{tabularx}{\linewidth}{p{45pt}|p{100pt}|p{100pt}|p{90pt}}
+\hline
+\diagbox[width=58pt]{\textbf{Predict}}{\textbf{True}} & \textbf{Positive}  &   \textbf{Negative} & \textbf{Metric}\\ \hline
+\textbf{Positive} & True Positive (TP) & False Positive (FP) & $\textbf{PPV} =\frac{TP}{TP+FP}$ \\ \hline
+ \textbf{Negative} &  False Negative (FN) &  True Negative (TN) &  $\textbf{NPV} =\frac{TN}{TN+FN}$ \\  \hline
+ \textbf{Metric} & $\textbf{Sensiticity} = \frac{TP}{TP+FN}$ & $\textbf{Specificity} = \frac{TN}{TN+FP}$  & \\  \hline
+\end{tabularx}
+\end{minipage}
+\end{table}
 
 ~\ref{fig:candidate_sum}
 \begin{figure}[H] % use float package if you want it here

@@ -1,124 +1,279 @@
-\chapter{中华人民共和国}
-\label{cha:china}
+\chapter{Methods and Results}
 
-\section{其它例子}
-\label{sec:other}
 
-在第~\ref{cha:intro} 章中我们学习了贝叶斯公式~(\ref{equ:chap1:bayes})，这里我们复
-习一下：
-\begin{equation}
-\label{equ:chap2:bayes}
-p(y|\vec{x}) = \frac{p(\vec{x},y)}{p(\vec{x})}=
-\frac{p(\vec{x}|y)p(y)}{p(\vec{x})}
-\end{equation}
+\section{Data issues and study design}
 
-\subsection{绘图}
-\label{sec:draw}
 
-本模板不再预先装载任何绘图包（如 \pkg{pstricks，pgf} 等），完全由用户来决定。
-个人觉得 \pkg{pgf} 不错，不依赖于 Postscript。此外还有很多针对 \LaTeX{} 的
- GUI 作图工具，如 XFig(jFig), WinFig, Tpx, Ipe, Dia, Inkscape, LaTeXPiX,
-jPicEdt, jaxdraw 等等。
 
-\subsection{插图}
-\label{sec:graphs}
-
-强烈推荐《\LaTeXe\ 插图指南》！关于子图形的使用细节请参看 \pkg{subcaption} 宏包的说明文档。
-
-\subsubsection{一个图形}
-\label{sec:onefig}
-一般图形都是处在浮动环境中。之所以称为浮动是指最终排版效果图形的位置不一定与源文
-件中的位置对应\footnote{This is not a bug, but a feature of \LaTeX!}，这也是刚使
-用 \LaTeX{} 同学可能遇到的问题。如果要强制固定浮动图形的位置，请使用 \pkg{float} 宏包，
-它提供了 \texttt{[H]} 参数，比如图~\ref{fig:xfig1}。
 \begin{figure}[H] % use float package if you want it here
   \centering
-  \includegraphics{thu-whole-logo.pdf}
-  \caption{利用 Xfig 制图}
-  \label{fig:xfig1}
+  \includegraphics[width = 0.8\textwidth]{data_issues}
+  \caption{Issues of exRNA data and strategies used in exSEEK method}
+  \label{fig:issues}
 \end{figure}
 
-大学之道，在明明德，在亲民，在止于至善。知止而后有定；定而后能静；静而后能安；安
-而后能虑；虑而后能得。物有本末，事有终始。知所先后，则近道矣。古之欲明明德于天
-下者，先治其国；欲治其国者，先齐其家；欲齐其家者，先修其身；欲修其身者，先正其心；
-欲正其心者，先诚其意；欲诚其意者，先致其知；致知在格物。物格而后知至；知至而后
-意诚；意诚而后心正；心正而后身 修；身修而后家齐；家齐而后国治；国治而后天下
-平。自天子以至于庶人，壹是皆以修身为本。其本乱而未治者 否矣。其所厚者薄，而其所
-薄者厚，未之有也！
-
-\hfill —— 《大学》
+exSEEK solves four major computational analysis issues in exRNA-seq data. As shown in Fig. \ref{fig:issues}. Fragmentation: exRNAs are mostly present as fragments instead of full-length transcripts due to degradation and protection mechanisms. Sparseness: RNA species with low abundance in exRNA-seq datasets cannot be detected due to limited amount of biofluid samples. Heterogeneity: the abundance of RNAs varies among exRNA-seq datasets obtained from individuals of the same biological group (e.g. healthy donors). Batch effect: the abundance of RNAs varies with factors, e.g. sampling time, library preparation protocol, which are unrelated to the biological group of interest. Using properly normalized expression matrix, exSEEK discovers biomarkers that best classifies exRNA-seq datasets through robust feature selection based on machine learning framework.
 
 
-\subsubsection{多个图形}
-\label{sec:multifig}
-
-如果多个图形相互独立，并不共用一个图形计数器，那么
-用 \texttt{minipage} 或者\texttt{parbox} 就可以。否则，请参看
-图~\ref{fig:big1-subcaptionbox}，它包含两个小图，分别是图~\ref{fig:subfig1}和
-图~\ref{fig:subfig2}。推荐使用 \cs{subcaptionbox}，因为可以像
-图~\ref{fig:big1-subcaptionbox} 那样对齐子图的标题，也可以使用 \pkg{subcaption}
-宏包的 \cs{subcaption}（放在 minipage中，用法同\cs{caption}）或
-是 \pkg{subfigure} 、\pkg{subtable}环境，像图~\ref{fig:big1-subfigure}，不要再
-用 \cs{subfloat}、\cs{subfigure} 和 \cs{subtable}。
-
-\begin{figure}[h]
-  \centering%
-  \subcaptionbox{第一个小图形\label{fig:subfig1}}[3cm] %标题的长度，超过则会换行，如下一个小图。
-    {\includegraphics[height=3cm]{thu-fig-logo.pdf}}%
-  \hspace{4em}%
-  \subcaptionbox{第二个小图形，注意这个图略矮些。如果标题很长的话，它会自动换行\label{fig:subfig2}}
-      {\includegraphics[height=2cm]{thu-text-logo.pdf}}
-  \caption{包含子图形的大图形(subcaptionbox示例)}
-  \label{fig:big1-subcaptionbox}
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 0.8\textwidth]{pipeline}
+  \caption{exSEEK frame work}
+  \label{fig:frame}
 \end{figure}
+We can have an overview of the exSEEK framework in Fig. \ref{fig:frame}. It includes three modules, reads process, matrix processing and feature selection. After careful reads mapping, domain calling. We can have the combined features as expression matrix. Next we can apply matrix processing methods to normalize read depth and correct batch effect of the expression matrix. We use some metrics to quantify the processing effect. Next we can apply some machine learning models to do robust feature selection and select candidates as biomarkers.
+
+
+\section{exRNA-seq data collection and preprocessing}
+
+\subsection{Processing extracellular small RNA datasets}
+We downloaded exosomal small RNA-seq data (S-exoRNA-seq) from GEO (accession: GSE71008). GSE71008 contains samples from three cancer types: CRC (100 samples), PRAD (36 samples) and PAAD (6 samples) and 50 samples from healthy donors. We excluded PAAD from our analysis due the small sample size. The cell free small RNA-seq dataset was compiled from 4 publications (GSE123972, GSE113994, GSE53080 and GSE94582). The GSE123973 (S-cfRNA-seq) dataset was generated from our previous study and is currently not public in GEO, which contains 30 blood plasma samples from HCC patients and 13 samples from healthy donors. GSE113994, GSE53080 and GSE94582 were all derived from healthy donors. GSE113994 originally contained 216 samples from healthy donors. To reduce sample imbalance between data sources, we filtered samples with less than 2,000,000 reads, > 20% UniVec-mapped reads (described below) or > 20% unmapped reads, resulting in 53 samples. The cfRNA dataset containing 132 samples was analyzed using a unified processing pipeline.
+In the reads cleaning step, we first trimmed 3’ adapters for each read using cutadapt. Reads with average quality score below 30 or shorter than 16nt after adapter trimming were discarded. In the reads mapping step, we adopted sequential mapping strategy to map reads to multiple sequence databases to increase sensitivity for detection of RNA types of interest (e.g. noncoding RNA). Bowtie2 was used with the “—sensitive” option and disabled local alignment. Reads were first mapped to spike-in sequence if spike-in RNA added to the library. The remaining reads were then mapped to UniVec database (from NCBI UniVec database) and rRNA database (from NCBI RefSeq database). Reads mapped to spike-in sequences, UniVec or rRNA were removed.
+
+Remaining reads after the first three steps were then mapped to RNA types of interest according a pre-defined order: lncRNA, miRNA, mRNA, piRNA, snoRNA, snRNA, srpRNA, tRNA, TUCP RNA and Y RNA. lncRNA was set to the highest priority to increase the sensitivity of detection of lncRNA peaks. miRNA sequences were downloaded from miRBase. Reads that overlap with mature miRNA annotations were assigned to that mature miRNA. piRNA sequences were downloaded from piRNABank. The genomic locations of other RNA types were extracted from the GENCODE V27 annotation file according the "gene\_type" attribute in each record. Sequences of all exons that belong to a transcript were joined such that reads could be mapped to splicing junctions without a junction-aware mapping software. For long RNAs with multiple isoforms, we only extracted sequences of the longest isoform to avoid ambiguity for mapping reads to exons shared by multiple isoforms. Reads that could not be mapped to predefined RNA types were mapped to genome sequences (UCSC genome build hg38) and assigned RNA type "other". Reads of "other" type were then annotated as "promoter", "enhancer", "repeats", "genomic". Promoter and enhancer regions were defined based on chromatin states discovered by the ChromHMM software from 9 cell lines. ChromHMM tracks were downloaded from the UCSC Genome Browser and converted to hg38 coordinates using CrossMap. Promoters were defined by three ChromHMM states "Active Promoter", "Weak Promoter" and "Posed Promoter". Enhancers were defined by three ChromHMM states "Strong Enhancer", "Weak Enhancer". Repeats regions were downloaded from the RepeatMasker track from UCSC Genome Browser (the "rmsk" table). Reads that could be mapped to the genome but could not be mapped to promoter, enhancer or repeats were defined as "genomic". In the last step, reads that could not be mapped to human genome were mapped to circular RNAs from circBase. We only consider reads that span across back-splicing junctions as circular RNA reads. Reads that could not be mapped to circular RNA were defined as "unmapped".
+
+
+\subsection{Processing extracellular long RNA datasets}
+Exosomal long RNA-seq (L-exoRNA-seq) datasets were downloaded from exoRBase. 12 CRC, 14 HCC, 14 PAAD and 32 normal samples were used in this study. Any adapters present in paired-end reads were removed using cutadapt. Read pairs with average quality score below 30 in either read of the pair were removed. Read pairs were then mapped three sequences databases (rRNA, human genome, circular RNA) using the sequential mapping strategy similar to the small RNA reads mapping strategy. In the genome mapping step, a genome index was generated using STAR with splicing junction annotations from GENCODE V27. Circular RNA mapping was similar to the strategy used in the small RNA mapping pipeline, with additional requirement that the genomic interval defined by a read pair (from 5’-end in read 1 to 3’-end in read 2) should overlap the back-splicing junction. Only read pairs mapped to human genome or circular RNA were included in further analysis. We removed duplicated read pairs using picard MarkDuplicates because the dataset contains a large proportion of duplicated reads due to PCR amplification in library construction. Finally, a gene count matrix was generated using featureCounts with options "-t exon -g gene\_id -M -s 1".
+
+\paragraph{Data summary}
+The datasets we use in the study are shown in table ~\ref{tab:exRNAsumtable}
+
+\begin{table}[htb]
+  \centering
+  \begin{minipage}[t]{0.9\linewidth} 
+  \caption[exRNA data summary]{exRNA Data summary}
+  \label{tab:exRNAsumtable}
+  %210pt in total
+    \begin{tabularx}{\linewidth}{p{70pt}|p{80pt}|p{110pt}|p{70pt}}
+      \toprule[1.5pt]
+      {\heiti Data type} & {\heiti Sources}  & {\heiti Sample class} & {\heiti Sample size}\\\midrule[1pt]   
+      S-exoRNA-seq & GSE71008 & \textbf{CRC}, PRAD, HD & 186\\
+      S-cfRNA-seq & GSE123972 & \textbf{HCC}, HD & 43\\
+      S-cfRNA-seq & GSE113994 & HD & 53\\
+      S-cfRNA-seq & GSE53080 & HD & 17\\
+      S-cfRNA-seq & GSE94582 & HD & 20\\
+      L-exoRNA-seq & exoRBase & \textbf{HCC}, CRC, PRAD, HD & 20\\
+      % （\cite{yuan2016plasma}） （\cite{tan2019noncoding}） （\cite{max2018human}） （\cite{giraldez2018comprehensive}） （\cite{akat2014comparative}） （\cite{li2017exorbase}）
+      \bottomrule[1.5pt]
+    \end{tabularx}
+  \end{minipage}
+\end{table}
+
+\section{exRNA fragments of long RNAs can be recurrently detected in plasma}
+
+\subsection{exRNA fragments detection}
+The first issue of exRNA data is that RNAs, especially long RNAs, are intrinsically unstable and fragmented in plasma. However, different from RNAs in tissue, we observe that exRNAs are not randomly fragmented in plasma based on both S-cfRNA-seq and S-exoRNA-seq data. We observed non-uniform distribution of reads along a most long transcripts and found regions with read coverage substantially higher than background (Fig. ~\ref{domain_example}). Because some of the hotspot regions may be due to random variations within a sample and is not suitable to serve as a biomarker, we analyzed the recurrence of such regions among samples. After aligning read coverage of multiple samples at the same transcript, we identified hotspot regions supported by multiple samples. Next, we developed a peak calling algorithm to detect regions with significantly higher reads coverage than background and can be detected in at least 10% samples. According to the origin of the fragments, the most diverse annotated RNA types was lncRNA. We also detected a large number of fragments that were mapped to human genome but were not annotated to any known RNA types. Compared to abundant RNA types like miRNA and lncRNA, exRNA domains in other RNA types and unannotated genomic regions were of higher diversity and could potentially include biomarkers that distinguish cancer and normal samples with higher accuracy. 
+
+
+\begin{figure}[h]
+    \centering%
+    \begin{subfigure}{0.4\textwidth}
+      \includegraphics[height=4.5cm]{peak_calling}
+      \caption{fragments detected by exSEEK}
+    \end{subfigure}%
+    \hspace{4em}%
+    \begin{subfigure}{0.4\textwidth}
+      \includegraphics[height=4cm]{domain_example}
+      \caption{Domain of cfRNA and tissue RNA}
+    \end{subfigure}
+    \caption{Domain example in cfRNA and tissue RNA}
+    \label{fig:domain_example}
+  \end{figure}
+
+\subsection{Domain detection}
+  Domain detection is similar to the peak calling in CLIP-seq/ChIP-seq datasets. However, peak calling for exRNA data is different from CLIP-seq/ChIP-seq datasets in several aspects: (1) a ChIP-seq experiment typically includes an input DNA control library to normalize non-uniform coverage in DNA sequencing, which was not available in most exRNA datasets; (2) CLIP-seq peak calling tools such as PARalyzer, CIMS utilize characteristic events caused by cross-linking to determine the RBP binding sites at single nucleotide resolution, which is not present in exRNA datasets; (3) Universal peak calling tools, e.g. Piranha, detect significant peaks using coverage of the start location of each mapped reads, which may deviates from the true peak location. We developed a domain detection algorithm for exRNA data with similar ideas to Piranha, but could detect domain locations with higher sensitivity and better resolution. 
+
+
+\subsection{ZTNB test-based peak calling}
+  We first divided the transcriptome and genome into 20nt bins and count number of reads that overlap each bin with at least 1 nucleotide for each sample. Similar to Piranha, we fitted a zero-truncated negative binomial (ZTNB) model to read counts of all bins with at least one read. P-values were calculated for each bin under the null hypothesis that read counts of the bin is smaller than the mean. Multiple hypothesis correction was applied to the p-values following the BH procedure and bins with adjusted p-values below 0.05 was considered as significant. However, the ZTNB test described above could miss some peaks because the read counts used to fit the null distribution contains bins with significantly large read counts. To increase the sensitivity of domain detection, we removed significant bins identified in the first step of ZTNB test and used the remaining bins for a second step of ZTNB test. The second step of ZTNB test was similar to the first step. The significant bins identified in the two rounds of ZTNB test was then merged into one set. Adjacent bins (distance = 0) were merged into a single domain. 
+
+\subsection{Recurrent exRNA fragments are associated with structural domain and/or protein binding}
+
+To confirm that fragmentation was more characteristic in exRNA dataset than in tissue, we analyzed small RNA-seq data from TCGA HCC samples using the same pipeline. We counted reads of both cfRNA samples and TCGA tissue samples in domains detected using cfRNA samples. We proposed the ratio between read counts in exRNA domain and the original full-length transcript as the measure of fragmentation. If most reads are distributed in a small region within a transcript, the domain/full-length ratio will be close to 1, indicating high fragmentation level. Otherwise, the number of reads in a small region is expected to be proportional to the length ratio between the region and full-length transcript. We calculated the domain/full-length ratio per transcript averaged across samples in the sample group and found that the ratio in cfRNA samples was significantly higher than in TCGA tissue samples. The conclusion was further supported by a exosomal small RNA-seq dataset and TCGA CRC small RNA-seq dataset.
+
+Small RNA fragments were reported to be generated through small RNA processing mechanism in tissue by previous studies. However, unlike RNAs in tissue, RNAs in plasma degrades during circulation and sample extraction. RNAs that are detected in plasma may be stabilized through various mechanisms including forming stable RNA secondary structure or associating with proteins. To explore the possibility that exRNA domains detected by our method was stabilized through RNA secondary structure, we calculated average structure profiles inside exRNA domains using icSHAPE data determined in HEK293 cell line in vivo. We generated background structure profiles by shuffling locations of exRNA domain among all detected transcripts in the cfRNA dataset. We found that exRNA domains are significantly more structured than background. We also found that the fraction of domains bound by at least RNA-binding protein was higher than background. The results are shown in Fig. \ref{fig:ic_rbp}
+
+
+\begin{figure}[h]
+\centering%
+\begin{subfigure}{0.3\textwidth}
+\includegraphics[height=4cm]{icshape}
+\caption{Structure characteristics of domain and background region revealed by icSHAPE reactivity}
+\end{subfigure}%
+\hspace{4em}%
+\begin{subfigure}{0.4\textwidth}
+\includegraphics[height=4cm]{rbp}
+\caption{Domain and background region’s potential to bind with RNA Binding Proteins}
+\end{subfigure}
+\caption{Structure and RBP binding analysis of domain}
+\label{fig:ic_rbp}
+\end{figure}
+
+\section{Correct data heterogeneity for exRNA}
+We generated an expanded count matrix by combine read counts mapped to miRNA and exRNA domains. However, the mapped read counts are affected RNA extraction efficiency, library size and technical batch effects in additional underlying RNA concentrations. We design the following pipeline (\label{fig:mx_process_pipe}) to do normalization and remove batch effect in expression matrix.
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.7\textwidth]{matrix_processing}
+    \caption{Matrix Processing Pipeline}
+    \label{fig:mx_process_pipe}
+\end{figure}
+
+
+A common practice is to calculate counts per million (CPM) to normalize library size, which can also be considered as applying a global normalization factor to each sample. Global normalization methods normalize all genes in sample by a common size factor which represents the effective library size. Various methods have been developed to calculate the common size factor, including counts per million (CPM), In an RNA composition, all gene expression values are affected by variation of a single gene, which is more obvious when the RNA composition is dominated by a few genes. The effect of abundant genes on gene expression values can be corrected by more robust methods for size factor calculation: relative log expression (RLE), trimmed mean of M-values (TMM). 
+We demonstrated the effect of different normalization methods using RLE (relative log expression) plots (Fig. \ref{fig:rle}). Relative log expression of a gene is log expression of a gene subtracted by median log expression of that gene across samples. Based on the assumption that most genes are not differentially expressed between samples, we expect that properly normalized expression of all genes should be distributed around zero. We observed that after normalization, the dispersion of relative log expression was reduced by RLE.
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.8\textwidth]{RLE}
+    \caption{Effect of library size normalization}
+    \label{fig:rle}
+\end{figure}
+
+We applied three methods that are commonly used to correct batch effects for microarray or RNA-seq data: ComBat, RUVs and limma. ComBat and limma requires known batch information, while RUVs discovers unknown batch effects from data. The major batch effect in the cfRNA dataset was their original publication, including library construction protocol sample extraction, etc. The dataset GSE94582 was divided into three batches because they were generated by different library construction protocols. We provided the batch effect as a categorical variable for limma and ComBat, and no batch information for RUVs.
+To demonstrate the results of batch effect correction, we plot samples in GSE123972, which were expected to be mixed in the same cluster. We performed variance decomposition analysis on the expression matrix, which measures batch effect by linear regressing expression values of each gene by class label and the batch variable (Fig. \ref{fig:batch_correction}). After batch effect correction, variance explained by the batch variable.
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.65\textwidth]{batch_correction}
+    \caption{batch correction evaluation}
+    \label{fig:batch_correction}
+\end{figure}
+
+To evaluate the effect of normalization by combinations of library size normalization methods and batch effect removal methods, we calculated two metrics for each corrected expression matrix: unsupervised clustering accuracy (UCA) and mkNN score ~\ref{eq:mknn}. UCA measures the consistence of sample labels by unsupervised clustering and true class labels, which reflects how biological variation is preserved after correction. mkNN measures the extent of samples from different batches are mixed in the same class. We expected that a perfectly corrected expression matrix should be assigned a UCA score of 1 and mkNN score of 1. 
+To demonstrate the results of matrix processing, we plot samples by the first two principal components after PCA (Fig. \ref{matrix_processing_metric}). In the expression matrix normalized by CPM, normal samples from GSE94582, GSE113994 and GSE53080 were well separated from normal samples in GSE123972, which were expected to be mixed in the same cluster. After batch effect correction, normal samples from all publications became closer, while remained separated from HCC samples.
+By comparing the two metrics of all combinations of methods, we recommend that CPM should be combined with ComBat or limma for the cfRNA dataset.
+
+
+
+\begin{equation}
+\label{eq:mknn}
+\frac { 1 } { B } \sum _ { b = 1 } ^ { B } \frac { \overline { x } _ { b } - k N _ { b } / ( N - 1 ) } { \min \left( k , N _ { b } \right) - k N _ { b } / ( N - 1 ) }
+\end{equation}
+
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 0.8\textwidth]{matrix_processing_metric}
+  \caption{Use UCA and mKNN score to evaluate matrix processing effect}
+  \label{fig:matrix_processing_metric}
+\end{figure}
+
+
+
+\section{Expression of exRNA domains predicts cancer better than full-length transcripts}
+
+\paragraph{feature selection algorithm}
+
+\begin{algorithm}
+  \caption{Robust feature selection algorithm}\label{alg:fs_algorithm}
+  \begin{algorithmic}[1]
+  \STATE Scale each feature independently using robust normalization;
+  \FOR{feature\_num $k \in [1,10]$}
+  \STATE Random select 90\% samples for 50 times;
+  \STATE Run a classifier (Random Forest, Logistic Regression or Linear SVM) to select features based on feature importance. 
+    \FOR{each classifier $\in$ [Random Forest, Logistic Regression or Linear SVM]}
+    \STATE Optimize classifier’s hyper-parameters by 5-fold cross-validation;
+    \ENDFOR
+  \STATE Select top k features that are recurrently selected across resampling runs;
+  \STATE Calculate AUC mean;
+  \ENDFOR
+  \STATE Rank processing method by AUC, select the best $k$;
+  %\STATE Select union of features in different feature\_num setting. Refit by selecting $I \in [1,10]$ features and calculate feature importance.
+  \end{algorithmic}
+  \end{algorithm}
+
+
+We developed a robust framework for classification and feature selection. We use the framework for resampling of samples and cross-validation to select features as shown in ~\ref{alg:fs_algorithm}. At first, we apply a robust feature scaling using (3rd quantile – 1st quantile) as scaling factor. For the best preprocessing method selected in matrix processing part, we test feature numbers including 1\~10, 20, 30, 40, and 50. For each feature number we would like to retain, we will do resampling of samples 50 times, retaining 80% samples randomly each time. We test three models including random forest, logistic regression, and linear SVM. In each time, we do a 3-fold cross validation for model hyperparameters optimization and retain features with highest weight in the model. After 50 times resampling process, select top  features recurrently selected across resampling runs as robust features. We also calculate Area under the ROC Curve (AUC) to quantify classification performance in each run and calculate its mean in 50 times resampling runs. At last we select union of features in different$𝑓𝑒𝑎𝑡𝑢𝑟𝑒_𝑛𝑢𝑚$ setting. Refit by selecting 1\~10 features and calculate feature importance.
+
+There are two metrics we use to evaluate our framework’s classification performance and select best classification model and best feature type. We use AUC to quantify classification performance and Kuncheva index (~\ref{eq:ki})to measure the stability of a feature selection method. We aaply a comprehensive feature selection strategy evaluation using GSE71008 CRC data and GSE123972 HCC data in (Fig. 4a, 4b). It shows that robust logistic regression is better than random forest in both AUC and stability and domain feature better predicts cancer samples than features with only miRNA which are widely used as biomarkers in previous studies. We also compare our robust feature selection framework with simple feature selection only using feature importance of a classification model to select fixed number of features without resampling (depicted as robust and max in the plot). It shows that robust feature selection framework (robust) performs better than simple feature selection (max) in both AUC and stability.
+
+\begin{equation}\label{eq:ki}
+\mathrm { KI } \left( f _ { I } , f _ { j } \right) = \frac { \left| f _ { I } \cap f _ { j } \right| N - d ^ { 2 } }{ d N - d ^ { 2 } } = \frac { \left| f _ { I } \cap f _ { j } \right| - d ^ { 2 } / N } { d - d ^ { 2 } / N }
+\end{equation}
+
+Applying the robust feature selection to three datasets GSE123972, GSE71008, and exoRBase, we could have the average AUC of four cancers in different datasets and specially the early stage classification result of HCC and CRC in GSE123972 and GSE71008 respectively in (Fig. \ref{fig:auc_bar_fig4c_5}).
+
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 0.7\textwidth]{auc_bar_fig4c_5}
+  \caption{Four cancers classification AUC in three datasets}
+  \label{fig:auc_bar_fig4c_5}
+\end{figure}
+
+To evaluate some certain biomarkers and candidates selected by exSEEK, we have AUC bar plot of these markers of HCC and CRC in GSE123972 and GSE71008 shown in Fig. \ref{fig:hcc_crc_auc_sum}. miR-20 and miRNA6, miRNA6 (use exSEEK to refit), ncRNA10 (selected by exSEEK) were tested on GSE71008, lRNA10 (selected by exSEEK) were tested on our own dataset (PICO). CRC/HD means binary classification of CRC and healthy donor, S1/HD means binary classification of CRC stage1 and healthy donor. The numbers in bracket indicated feature number. We also have AUC summary of some known biomarkers and selected candidates for HCC. miR-21 and miRNA7 (use original parameters), miRNA7 (use exSEEK to refit), ncRNA10 (selected by exSEEK) were tested on GSE123972, lRNA10 (selected by exSEEK) were tested on exoRBase. HCC/HD means binary classification of HCC and healthy donor, S1/HD means binary classification of HCC stage1 and healthy donor. Previously, 7 miRNAs have been used as a panel for liver cancer diagnosis (ref.). We have compared performance of the published model (ref) and a model re-built by exSEEK using the same 7 miRNAs. The dramatic improvement demonstrates both the robustness of 7 miRNAs revealed previously and the importance of data normalization and processing steps we have engineered in exSEEK.
+	
 \begin{figure}[h]
   \centering%
-  \begin{subfigure}{3cm}
-    \includegraphics[height=3cm]{thu-fig-logo.pdf}
-    \caption{第一个小图形}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[height=5cm]{hcc_auc_sum_revise_fig4b_5}
+    \caption{Biomarkers classification performance in HCC}
   \end{subfigure}%
   \hspace{4em}%
-  \begin{subfigure}{0.5\textwidth}
-    \includegraphics[height=2cm]{thu-text-logo.pdf}
-    \caption{第二个小图形，注意这个图略矮些。subfigure中同一行的子图在顶端对齐。}
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[height=5cm]{crc_auc_sum_revise_fig4b_5}
+    \caption{Biomarkers classification performance in CRC}
   \end{subfigure}
-  \caption{包含子图形的大图形(subfigure示例)}
-  \label{fig:big1-subfigure}
+  \caption{AUC summary of HCC and CRC}
+  \label{fig:hcc_crc_auc_sum}
 \end{figure}
 
-古之学者必有师。师者，所以传道受业解惑也。人非生而知之者，孰能无惑？惑而不从师，
-其为惑也，终不解矣。生乎吾前，其闻道也固先乎吾，吾从而师之；生乎吾後，其闻道也亦
-先乎吾，吾从而师之。吾师道也，夫庸知其年之先後生於吾乎！是故无贵无贱无长无少，道
-之所存，师之所存也。
+To illustrate the classification performance of features selected by our framework. We plot Receiver operating characteristic (ROC) curve of our selected features and previously reported biomarkers in (Fig. \ref{fig:roc_curve}). Our selected features perform better than previous biomarkers in AUC. It has a sensitivity of 0.966, specificity of 0.909 and precision (PPV) of 0.749 in balanced point. The balanced point was selected using some metrics explained in Matrix processing evaluation part.
 
-嗟乎！师道之不传也久矣，欲人之无惑也难矣。古之圣人，其出人也远矣，犹且从师而问焉；
-今之众人，其下圣人也亦远矣，而耻学於师。是故圣益圣，愚益愚。圣人之所以为圣，愚
-人之所以为愚，其皆出於此乎？爱其子，择师而教之，於其身也，则耻师焉，惑焉。彼童子
-之师，授之书而习其句读者，非吾所谓传其道、解其惑者也。句读之不知，惑之不解，或师
-焉，或不焉，小学而大遗，吾未见其明也。巫医、乐师、百工之人不耻相师，  士大夫之族
-曰“师”曰“弟子”之云者，则群聚而笑之。问之，则曰：彼与彼年相若也，道相似也，位
-卑则足羞，官盛则近谀。呜呼！师道之不复，可知矣。巫医、乐师、百工之人。吾子不齿，
-今其智乃反不能及，其可怪也欤！圣人无常师。孔子师郯子、苌子、师襄、老聃。郯子之徒，
-其贤不及孔子。孔子曰：“三人行，必有我师。”是故弟子不必不如师，师不必贤於弟子。
-闻道有先後，术业有专攻，如是而已。
-
-如果要把编号的两个图形并排，那么小页就非常有用了：
-\begin{figure}
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \includegraphics[height=2cm]{thu-whole-logo.pdf}
-  \caption{并排第一个图}
-  \label{fig:parallel1}
-\end{minipage}\hfill
-\begin{minipage}{0.48\textwidth}
-  \centering
-  \includegraphics[height=2cm]{thu-whole-logo.pdf}
-  \caption{并排第二个图}
-  \label{fig:parallel2}
-\end{minipage}
+We also visualize the heatmap of selected features and its weight, log CPM, fold change and its p-value in differential expression and plot heatmap in (Fig. \ref{fig:candidate_sum}). Weight, recurrence, fold change and -log10(q value) of selected candidates were visualized by scatter and bar plot. We further compare different feature number in feature selection. It shows we can achieve similar performance using less (3 or 4) features (Fig. \ref{fig:compare_feature_num})
+ 
+ 
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.4\textwidth]{roc_curve}
+    \caption{ROC curve of HCC early stage classification result}
+    \label{fig:roc_curve}
 \end{figure}
 
-李氏子蟠，年十七，好古文、六艺，经传皆通习之，不拘於时，学於余。余嘉其能行古
-道，作师说以贻之。
 
-\hfill —— 韩愈（唐）
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.8\textwidth]{compare_feature_num}
+    \caption{AUC comparison when selecting different number of candidates}
+    \label{fig:compare_feature_num}
+\end{figure}
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 1\textwidth]{candidate_sum}
+    \caption{Analysis of selected features}
+    \label{fig:candidate_sum}
+\end{figure}
+
+
+\section{exSEEK software usage}
+
+\subsection{exSEEK modules}
+We developed exSEEK software to do the exRNA analysis and feature selection, we use snakemake(\cite{koster2012snakemake})to control the process. exSEEK contains three main modules shown in Fig. \ref{fig:exseekmodule}. The Utilities and Preprocess modules contain reads preprocessing, mapping and expression matrix construction. exSEEK module can do differential expression, matrix processing, feature selection. The users only need to fill in one config files and use very simple commands to run the software.
+
+\begin{figure}[h]
+    \centering%
+    \begin{subfigure}{0.4\textwidth}
+      \includegraphics[height=3.5cm]{exSEEK_module}
+      \caption{exSEEK software}
+    \end{subfigure}%
+    \hspace{4em}%
+    \begin{subfigure}{0.4\textwidth}
+      \includegraphics[height=3.5cm]{command}
+      \caption{exSEEK software commands}
+    \end{subfigure}
+    \caption{exSEEK modules and commands}
+    \label{fig:exseekmodule}
+  \end{figure}
+
+
+\subsection{Plotting modules of exSEEK}
+
+
+exSEEK also contains highly interactive and standard plotting modules shown in Fig. \ref{fig:jupyter}, we use jupyter-notebook(~\cite{kluyver2016jupyter}) to construct plotting module. Users can obtain high standards plots using interactive settings.
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.8\textwidth]{jupyter}
+    \caption{exSEEK plotting modules}
+    \label{fig:jupyter}
+\end{figure}

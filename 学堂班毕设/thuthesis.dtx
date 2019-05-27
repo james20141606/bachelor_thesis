@@ -16,7 +16,7 @@
 %
 % \iffalse
 %<*driver>
-\ProvidesFile{thuthesis.dtx}[2019/04/16 5.5.1 Tsinghua University Thesis Template]
+\ProvidesFile{thuthesis.dtx}[2019/04/27 5.5.2 Tsinghua University Thesis Template]
 \documentclass{ltxdoc}
 \usepackage{dtx-style}
 
@@ -1023,7 +1023,7 @@
 %    \begin{macrocode}
 %<cls>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<cls>\ProvidesClass{thuthesis}
-%<cls>[2019/04/16 5.5.1 Tsinghua University Thesis Template]
+%<cls>[2019/04/27 5.5.2 Tsinghua University Thesis Template]
 %    \end{macrocode}
 %
 % 检查编译引擎，要求使用 XeLaTeX。
@@ -1051,7 +1051,7 @@
 %<*cls>
 \hyphenation{Thu-Thesis}
 \def\thuthesis{ThuThesis}
-\def\version{5.5.1}
+\def\version{5.5.2}
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=thu,
@@ -1233,6 +1233,8 @@
 % 生成有书签的 pdf 及其开关，请结合 gbk2uni 避免书签乱码。
 % \changes{v2.6}{2006/06/09}{去除 hyperref 选项，等待全局传递。}
 % \changes{v5.2.2}{2016/01/25}{目录中标题和页码都是链接。}
+% \changes{v5.5.3}{2019/05/01}{处理 \pkg{hyperref} 与 \pkg{unicode-math}
+%   的兼容性问题。}
 %    \begin{macrocode}
 \RequirePackage{hyperref}
 \hypersetup{
@@ -1240,6 +1242,8 @@
   bookmarksnumbered  = true,
   bookmarksopen      = true,
   bookmarksopenlevel = 1,
+  unicode            = true,
+  psdextra           = true,
   breaklinks         = true,
   plainpages         = false,
   hidelinks,
@@ -1247,6 +1251,16 @@
 \pdfstringdefDisableCommands{
   \let\\\@empty
   \let\hspace\@gobble
+}
+%    \end{macrocode}
+%
+% \pkg{hyperref} 与 \pkg{unicode-math} 存在一些兼容性问题，见
+% \href{https://github.com/ustctug/ustcthesis/issues/223}{
+%   ustctug/ustcthesis\#223} 和
+% \href{https://github.com/ho-tex/hyperref/pull/90}{ho-tex/hyperref\#90}。
+%    \begin{macrocode}
+\@ifpackagelater{hyperref}{2019/04/27}{}{%
+  \g@addto@macro\psdmapshortnames{\let\mu\textmugreek}%
 }
 %    \end{macrocode}
 %
@@ -1400,6 +1414,7 @@
 %    \end{macrocode}
 %
 % 使用 \pkg{unicode-math} 配置数学字体
+% \changes{v5.5.2}{2019/04/21}{使用 XITS 数学字体。}
 %    \begin{macrocode}
 \unimathsetup{
   math-style = ISO,
@@ -3185,15 +3200,18 @@
 \def\@biblabel#1{[#1]\hfill}
 %    \end{macrocode}
 %
-% 两种引用样式：
+% 几种种引用样式：
 % \changes{v5.4.0}{2017/12/3}{\cs{bibliographystyle}\marg{newbib} will cause \cs{bibstyle@newbib} to
 % be called on THE NEXT LATEX RUN (via the aux file).}
 % \changes{v5.4.1}{2017/12/04}{bst 在 ctan 上不分路径，故加前缀。}
+% \changes{v5.5.3}{2019/05/22}{修正本科生的文献引用样式。}
 %    \begin{macrocode}
 \expandafter\newcommand\csname bibstyle@thuthesis-numeric\endcsname{%
   \bibpunct{[}{]}{,}{s}{,}{\textsuperscript{,}}}
 \expandafter\newcommand\csname bibstyle@thuthesis-author-year\endcsname{%
   \bibpunct{(}{)}{;}{a}{,}{,}}
+\expandafter\newcommand\csname bibstyle@thuthesis-bachelor\endcsname{%
+  \bibpunct{[}{]}{,}{s}{,}{\textsuperscript{,}}}
 %    \end{macrocode}
 %
 % 下面修改 \pkg{natbib} 的引用格式，主要是将页码写在上标位置。

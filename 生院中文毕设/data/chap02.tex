@@ -362,7 +362,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
   \end{algorithm}
 
   
-特征选择的详细算法可以由Algorithm ~\ref{alg:fs_algorithm}得到。首先，不同于DESeq2要求输入未经归一化的表达值，特征选择算法可以输入经过了归一化和去除批次效应的表达值。由于我们只对样本进行了归一化，在使用机器学习模型进行特征选择时，一般还要对特征进行逐个标准化。公式~\ref{eq:robustnorm}表示robust normalization的具体做法，对于每个特征，通过减去其中位数，除以四分间距（IQR: Interquartile Range），即可得到标准化后的表达值，使用四分间距作为分母而不是标准差，可以有效避免极端值对标准化的影响，具有更强的鲁棒性。
+特征选择的详细算法可以由Algorithm ~\ref{alg:fs_algorithm}得到。首先，不同于DESeq2要求输入未经归一化的表达值，特征选择算法可以输入经过了归一化和去除批次效应的表达值。我们之前只对样本进行了库大小的归一化，一般而言还要对特征进行逐个标准化。公式~\ref{eq:robustnorm}表示robust normalization的具体做法，对于每个特征，通过减去其中位数，除以四分间距（IQR: Interquartile Range），即可得到标准化后的表达值，使用四分间距作为分母而不是标准差，可以有效避免极端值对标准化的影响，具有更强的鲁棒性。
 \begin{equation}\label{eq:robustnorm}
   \text { robust\_scale } \left( x _ { i j } ^ { \prime } \right) = \frac { x _ { i j } - \operatorname { median } _ { k } x _ { i k } } { Q _ { 0.75 } \left( \mathbf { x } _ { i } \right) - Q _ { 0.25 } \left( \mathbf { x } _ { i } \right) }
 \end{equation}

@@ -5,7 +5,7 @@
 \label{sec:first}
 
 \subsection{exRNA数据收集}
-我们收集整理了实验室自产的一套和两套发表的exRNA-seq数据，为了后续方便，我们称细胞外游离的RNA测序数据为cfRNA-seq，外泌体的RNA测序数据为exoRNA-seq. 同时我们用L(long)和S(small)区分长RNA和小RNA测序数据。一共四种主要的数据类型: S-cfRNA-seq, S-exoRNA-seq, L-cfRNA-seq, L-exoRNAs-eq. 我们收集的数据的具体信息如下：S-exoRNA-seq 数据来自于 GEO 数据库中收录的 GSE71008 （\cite{yuan2016plasma}），包含健康供体（healthy donor, HD）的 50 个，结直肠癌100 个（colorectal cancer, CRC）样本，前列腺癌（prostate adenocarcinoma, PRAD）36 个。  S-cfRNA-seq ，我们整理了实验室内部产生的数据GSE123972 （\cite{tan2019noncoding}） 以及GSE113994（\cite{max2018human}），GSE53080（\cite{giraldez2018comprehensive}） 和 GSE94582（\cite{akat2014comparative}）；GSE123973 有可用的肝癌（hepatocellular carcinoma, HCC） 样本30例，其中包括早期肝癌(HCC stageA)16个，健康供体（HD）的 13 个样本。 GSE113994包含53健康供体，GSE53080包含17健康供体，GSE94582包含20健康供体。对于 L-exoRNA-seq 数据，我们收集exoRBase数据库（\cite{li2017exorbase}）中的数据，其源于多个实验室的合作，包括肝癌样本14个，结肠癌样本12个，胰腺癌样本14个和健康供体32个。
+我们收集整理了实验室自产的一套和两套发表的exRNA-seq数据，为了后续方便，我们称细胞外游离的RNA测序数据为cfRNA-seq，外泌体的RNA测序数据为exoRNA-seq. 同时我们用L(long)和S(small)区分长RNA和小RNA测序数据。一共四种主要的数据类型: S-cfRNA-seq, S-exoRNA-seq, L-cfRNA-seq, L-exoRNA-seq. 我们收集的数据的具体信息如下：S-exoRNA-seq 数据来自于 GEO 数据库中收录的 GSE71008 （\cite{yuan2016plasma}），包含健康供体（healthy donor, HD）的 50 个，结直肠癌100 个（colorectal cancer, CRC）样本，前列腺癌（prostate adenocarcinoma, PRAD）36 个。  S-cfRNA-seq ，我们整理了实验室内部产生的数据GSE123972 （\cite{tan2019noncoding}） 以及GSE113994（\cite{max2018human}），GSE53080（\cite{giraldez2018comprehensive}） 和 GSE94582（\cite{akat2014comparative}）；GSE123973 有可用的肝癌（hepatocellular carcinoma, HCC） 样本30例，其中包括早期肝癌(HCC stageA)16个，健康供体（HD）的 13 个样本。 GSE113994包含53健康供体，GSE53080包含17健康供体，GSE94582包含20健康供体。对于 L-exoRNA-seq 数据，我们收集exoRBase数据库（\cite{li2017exorbase}）中的数据，其源于多个实验室的合作，包括肝癌样本14个，结肠癌样本12个，胰腺癌样本14个和健康供体32个。
 数据总结如表~\ref{tab:exRNAsumtable}所示
 
 \begin{table}[htb]
@@ -30,7 +30,7 @@
 \end{table}
 
 \paragraph{exRNA测序数据的处理}
-针对exRNA数据微量性的特点，我们转门设计了小RNA测序数据的顺序比对方法，确定了其比对的先后顺序。完整的流程如图~\ref{fig:reads_processing}所示。包括数据清洗，质量控制，顺序比对（针对小RNA）或序列比对，以及构建
+针对exRNA数据微量性的特点，我们专门设计了小RNA测序数据的顺序比对方法，确定了其比对的先后顺序。完整的流程如图~\ref{fig:reads_processing}所示。包括数据清洗，质量控制，顺序比对（针对小RNA）或序列比对，以及构建表达矩阵，在构建表达矩阵时，针对小RNA测序中的长RNA（如Y RNA, lncRNA, snoRNA等），课题合作成员史斌斌还开发了专门的寻找其片段作为特征的方法。由于exRNA的微量性，不同样本间的各RNA比例变化很大，不论是确定比对顺序，还是做质量控制（quality control, QC）均需要精细的控制，我们使用丰富的可视化方法获得各类RNA的比例的统计结果，以及质量控制的结果总结等。接下来分别简要叙述长exRNA测序数据(L-exoRNA-seq)和小exRNA(s-exoRNA-seq, s-cfRNA-seq)测序数据的处理流程和结果。
 
 \begin{figure}[H] % use float package if you want it here
     \centering
@@ -39,10 +39,15 @@
     \label{fig:reads_processing}
 \end{figure}
 
+
+
+
 \subsection{长exRNA测序数据的处理}
 
-图~\ref{fig:exorbase_basic} ，数据来源为exoRBase。 (A) 不同RNA映射比例的饼图; (B) 不同RNA的长度分布的三维条形图;
-(C) 不同RNA的映射比例的箱线图 (D) 每个样本各种RNA映射比例的叠加条形图。
+我们采用L-exoRNA-seq数据作为长exRNA数据，数据来自于exoRBase数据库（\cite{li2017exorbase}），测序类型为长RNA-seq双端（paired end）测序。我们首先用cutadapt工具实现对接头的剪切（trim adapter），因为是双端测序，我们要求只要其中任意一个read的质量分数低于30就会被滤除。我们首先将将reads比对到rRNA并且去除掉所有比对上的reads，这是因为显然rRNA不会被分泌到细胞外，不符合我们的要求。然后我们将reads比对到人类基因组（version: human genome 38），除此之外，我们还额外关注了circular RNA的信息，因此在比对到人类基因组之后，我们专门又将reads比对到circBase数据库。由于是双端测序，我们规定需要在互相配对的两条reads均比对成功的前提下才算作比对成功。长exRNA测序数据还有较为严重的因为qPCR扩增导致的duplication问题，因此我们还是用picard去除了duplicates，最后再使用featurecounts软件生成基因表达矩阵（基因计数矩阵）。
+
+\paragraph{长RNA比对结果统计}
+exSEEK可以自动统计出入图~\ref{fig:exorbase_basic} 所示的比对结果， (A) 表示不同RNA映射比例的饼图; (B) 表示不同RNA的长度分布的三维条形图;(C) 表示不同RNA的映射比例的箱线图 (D) 表示每个样本各种RNA映射比例的叠加条形图。
 \begin{figure}[H] % use float package if you want it here
     \centering
     \includegraphics[width = 0.8\textwidth]{exorbase_basic}
@@ -50,14 +55,20 @@
     \label{fig:exorbase_basic}
 \end{figure}
 
-
+可以看到长exRNA测序数据的结果中，绝大部分的reads比对到了mRNA和人类基因组上以及有较大比例没有比对上的reads。另外还有少量的circRNA，srpRNA，lncRNA等。我们在构建表达矩阵时并不使用miRNA和piRNA，因为exoRBase建库时使用的是双端150（PE150）测序，自动筛除掉了RNA长度较低的miRNA和piRNA。值得注意的是，虽然非编码RNA如circRNA，srpRNA，lncRNA等的绝对比例不高，但是后续分析可以发现发生差异表达的RNA中这些非编码RNA可能占有较高的比例，所以它们依然有作为生物标志物的潜力。
 
 
 
 \subsection{小exRNA测序数据的处理}
 
-~\ref{fig:lulab_basic}，数据来源为GSE123973。 (A) 不同RNA映射比例的饼; (B) 不同RNA的长度分布的三维条形图;
-(C) 不同RNA的映射比例的箱线图 (D) 每个样本各种RNA映射比例的叠加条形图。
+
+我们采用S-exoRNA-seq和S-cfRNA-seq数据作为小exRNA数据，S-exoRNA-seq数据来自于 GEO 数据库中收录的 GSE71008 （\cite{yuan2016plasma}），S-cfRNA-seq来自于GSE123972（\cite{tan2019noncoding}） 以及GSE113994（\cite{max2018human}），GSE53080（\cite{giraldez2018comprehensive}） 和 GSE94582（\cite{akat2014comparative}），测序类型为小RNA-seq单端（single end）测序。
+
+
+我们首先用cutadapt工具实现对接头的剪切（trim adapter），相比于双端测序，单端测序时只需要去除3’端的接头即可，我们同样要求reads的质量得分必须要于30分，且要求其长度必须在16个碱基长度到50个碱基长度之间。我们首选可选择地将reads比对到spikein序列上，然后是rRNA数据库以及载体数据库（UniVec）上（以去除被载体污染的reads）。接下来针对小RNA测序长度短，量小的问题，为了关注我们感兴趣的RNA，我们使用单独比对的方法，分别将reads按顺序比对到各个RNA注释数据库上，我们发现不同的比对顺序会造成各类RNA的比对比例产生较大的变化，因此我们在前期工作中探索了不同的比对顺序的影响，因为使用Bowtie2进行一次比对需要的时间很长，我们使用了专门设计的算法可以在一次比对后测定数十种不同的测序顺序各个RNA的比例，确定了我们关注的RNA如lncRNA，mRNA等的比例如何要求，最终确定了lncRNA、miRNA、mRNA、piRNA、snoRNA、snRNA、srpRNA、tRNA、 TUCP RNA、 Y RNA的比对顺序。对于无法比对到人类基因组的reads，我们将其比对到启动子，增强子，和重复区域（enhancer，promoter，repeats）等位置，最终将剩余的reads比对到circRNA上，对于依然无法比对的reads，我们将其命名为unmapped reads。
+
+\paragraph{小RNA比对结果统计}
+exSEEK可以自动统计出入图~\ref{fig:lulab_basic}所示的比对结果， (A) 表示不同RNA映射比例的饼图; (B) 表示不同RNA的长度分布的三维条形图;(C) 表示不同RNA的映射比例的箱线图 (D) 表示每个样本各种RNA映射比例的叠加条形图。
 \begin{figure}[H] % use float package if you want it here
     \centering
     \includegraphics[width = 0.8\textwidth]{lulab_basic}
@@ -65,10 +76,19 @@
     \label{fig:lulab_basic}
 \end{figure}
 
+通过对比结果统计图可以看到，大多数的reads比对到了Y RNA，miRNA和rRNA上，snoRNA，enhancer和repeats也有一定比例的reads比对上。我们发现rNRA，miRNA和Y RNA不但比例较高，而且不同样本间的比例还有较大的差异，这可能是因为不同的样本存在一些批次效应（如RNA提取方法等的差异）。Y RNA的种类很少，只有四条，但是其丰度极大，有百分之四十左右的reads会比对到这四条RNA上。Y RNA是小的非编码RNA。它们是Ro60核糖核蛋白颗粒的组分，是系统性红斑狼疮患者的自身免疫抗体的靶标。它们也是通过与染色质和起始蛋白相互作用进行DNA复制所必需的。Y RNA在一些人类中过度表达，是细胞增殖所必需的，其分解产物也会参与到自身免疫和一些其他病理情况中(~\cite{hall2013rnas})，因此Y RNA也有潜在的区分癌症和正常样本的功能。值得注意的是circRNA在小RNA测序中的比例极低，不到万分之一，因此可能不能作为潜在的生物标志物使用，这和长exRNA测序中的结果不同，与长exRNA测序类似的是，虽然非编码RNA如lncRNA，snoRNA，tRNA等的绝对比例不高，但是后续分析可以发现发生差异表达的RNA中这些非编码RNA可能占有较高的比例，所以它们依然有作为生物标志物的潜力。
+
+
+
+
 \section{表达矩阵的构建}
 \label{sec:second}
 
-图~\ref{fig:length_distribution}使用三维条状图和折线图展示了S-cfRNA-seq数据的各种类型RNA的长度分布。
+完成了exRNA-seq数据的收集，预处理和比对后，我们进行了exRNA-seq数据的表达矩阵的构建。传统的表达矩阵构建只需要使用如featurecounts之类的软件工具即可。对于L-exoRNA-seq数据我们就是这么处理的。对于小exRNA-seq测序数据，我们采取了由课题合作成员史斌斌专门设计的结构域检测（domain calling）方法来发现结构域特征，并以结构域特征取代全长特征来构建表达矩阵。
+
+
+\paragraph{小exRNA-seq测序数据的碎片化特征}
+我们首先从exRNA-seq数据的比对部分获得图~\ref{fig:length_distribution}，使用三维条状图和折线图展示了S-cfRNA-seq数据的各种类型RNA的长度分布。可以发现在S-exRNA-seq中，碎片化的情况非常严重，大多数的长RNA的reads长度也集中在20-30个碱基长度范围内。为此我们希望可以找到信噪比较高的reads覆盖区域更加集中的片段作为特征，以取代其全长特征。我们开发了一种专门针对 exRNA 数据的域检测算法，其总体设计思想与传统的根据read起始位置计算其覆盖值的peak calling软件Piranha类似，但是我们的方法可以做到更高灵的敏度以及找到更加准确的域位置。
 \begin{figure}[h]
 \centering%
 \begin{subfigure}{0.4\textwidth}
@@ -84,56 +104,11 @@
 \label{fig:length_distribution}
 \end{figure}
 
-\subsection{结构域检测算法}
 
-零阶段负二项分布(Zero Truncated Negative Binomial, ZTNB)模型如公式~\ref{equ:ZTNB}所示，其中r为实验指定的失败次数，也称分散系数，x为此时的成功次数，p为每次实验成功概率。$\Gamma$为伽马函数，如公式~\ref{equ:gamma}所示。
-\begin{equation}\label{equ:ZTNB}
-    p ( x ) = \left[ \Gamma ( x + r ) p^r ( 1 - p )^x \right] \left[ \Gamma ( n ) x ! \left( 1 - p ^r \right) \right]  
-\end{equation}
-
-\begin{equation}\label{equ:gamma}
-    \Gamma ( x ) = \int _ { 0 } ^ { + \infty } t ^ { x - 1 } e ^ { - t } \mathrm { d } t
-\end{equation}
+\paragraph{结构域可视化}
+由于结构域检测算法主要由史斌斌同学完成，这里不再叙述其具体原理和过程，只展示相关的部分分析结果。为了展示exRNA-seq数据，尤其是小exRNA数据缺失存在明显的碎片化特征，我们比较了四套RNA-seq测序数据，两套来自小exRNA-seq数据，两套来自于组织RNA数据。我们以S-cfNRA-seq和S-exoRNA-seq的每个峰的中点作为原点坐标进行覆盖度的可视化，如图~\ref{fig:domain_size}所示，可以看到对于exRNA数据，在峰的周围有非常显著的reads覆盖度的凸起，高于周围的区域，而对于组织RNA数据则没有明显的峰存在。我们还对exRNA的结构域长度统计，发现大多数结构域片段的长度集中在30个碱基长度左右，很少超过100个碱基长度，这进一步佐证了exRNA测序数据的大多数reads都以碎片化形式存在，而不是全长形式。
 
 
-图~\ref{fig:domain_example}
-\begin{figure}[h]
-    \centering%
-    \begin{subfigure}{0.4\textwidth}
-      \includegraphics[height=4.5cm]{peak_calling}
-      \caption{结构域检测算法检测到的片段}
-    \end{subfigure}%
-    \hspace{4em}%
-    \begin{subfigure}{0.4\textwidth}
-      \includegraphics[height=4cm]{domain_example}
-      \caption{结构域片段在exRNA和组织RNA数据中的比较}
-    \end{subfigure}
-    \caption{结构域检测算法检测到的片段举例}
-    \label{fig:domain_example}
-  \end{figure}
-
-
-\subsection{结构域检测分析}
-
-
-图~\ref{fig:ic_rbp}
-\begin{figure}[h]
-\centering%
-\begin{subfigure}{0.3\textwidth}
-\includegraphics[height=4cm]{icshape}
-\caption{使用icSHAPE展示不同位置片段的结构特性}
-\end{subfigure}%
-\hspace{4em}%
-\begin{subfigure}{0.4\textwidth}
-\includegraphics[height=4cm]{rbp}
-\caption{使用RBP binding数据展示不同位置片段与RBP结合的潜在可能性}
-\end{subfigure}
-\caption{结构域片段结构域RBP结合性分析}
-\label{fig:ic_rbp}
-\end{figure}
-
-
-图~\ref{fig:domain_size}展示了XXXXXXXXXXXXXXX
 \begin{figure}[h]
   \centering%
   \begin{subfigure}{0.4\textwidth}
@@ -150,29 +125,27 @@
 \end{figure}
 
 
+\paragraph{表达矩阵的数据统计}
 
-图~\ref{fig:div_abu}
+最终对于小exRNA-seq测序数据，我们构建了由长RNA的结构域特征加miRNA全长特征合并的表达矩阵，对于长exRNA-seq数据，我们直接适用featurecounts构建全长特征，作为下一步表达矩阵处理的输入。对于我们专门使用结构域检测算法特殊处理的小exRNA测序数据的表达矩阵， 我们还做了如下的可视化分析。如图~\ref{fig:div_abu}所示，对于S-cfRNA-seq数据，我们发现miRNA，Y RNA和lncRNA占据了较高的丰度，但是由于使用了结构域检测算法，一些非编码RNA如snoRNA、tRNA、tucpRNA、snRNA和srpRNA均可以有较多的种类被检测到，显示出结构域检测算法可以帮助提供非编码RNA在表达矩阵中的多样性和种类数量。对于S-exoRNA-seq数据同样也可以观察到这样的特征，甚至更加明显，其中几种丰度非常微量的RNA如snRNA、lncRNA、mRNA、tucpRNA、srpRNA和snoRNA经过结构域检测算法，可以得到非常多样的特征。
+
 \begin{figure}[h]
   \centering%
   \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=4cm]{diversity_abundance_cfRNA}
+    \includegraphics[height=3.5cm]{diversity_abundance_cfRNA}
     \caption{S-cfRNA-seq结构域和miRNA特征的丰度与多样性}
   \end{subfigure}%
   \hspace{4em}%
   \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=4cm]{diversity_abundance_scirep}
+    \includegraphics[height=3.5cm]{diversity_abundance_scirep}
     \caption{S-exoRNA-seq结构域和miRNA特征的丰度与多样性}
   \end{subfigure}
   \caption{小exRNA-seq结构域和miRNA特征的丰度与多样性}
   \label{fig:div_abu}
 \end{figure}
 
+进一步地为了检测这些特征是否对于区分癌症和正常样本有用，我们绘制了如图~\ref{fig:diff_pie}所示的差异表达分析中各类RNA所占比例的饼图。我们发现虽然miRNA在exRNA-seq数据中的丰度很大，但是其在S-cfRNA-seq和S-exoRNA-seq的差异表达基因中所占的比例只有20\%左右，这进一步说明了其他丰度较低的RNA其实具有很高的多样性，而且有潜力作为区分癌症和正常样本的生物标志物，作为过去被广泛研究的miRNA癌症生物标志物的补充。
 
-
-
-
-
-图~\ref{fig:diff_pie}
 \begin{figure}[h]
   \centering%
   \begin{subfigure}{0.4\textwidth}
@@ -202,8 +175,27 @@
     \label{fig:mx_process_pipe}
 \end{figure}
 
-%\subsection{过滤与归责处理}
+\subsection{过滤与归责处理}
+我们首先是用了过滤和归责处理(imputation)的方法对表达矩阵进行处理。因为exRNA数据的稀疏化特征，是用过滤和归责是很常规的想法。
 
+
+由于exRNA中有大量的缺失值，因此过滤掉一些整体表达值很低的基因是常见的做法。exSEEK可以自己设置过滤的条件，比如对于原始基因计数矩阵，或者counts per millio(CPM), reads per kb per million reads(PRKM)进行过滤，默认设置为过滤掉基因计数矩阵中表达值小于5的样本超过50\%的那些基因。
+
+\paragraph{归责处理}
+归责处理即对数据中的缺失值进行推断和插补，我们使用scImpute（\cite{li2018accurate}）进行归责处理，scImpute的思想如图~\ref{fig:scimpute}：
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.7\textwidth]{scimpute}
+    \caption{scImpute原理}
+    \label{fig:scimpute}
+\end{figure}
+
+\begin{itemize}
+\item 首先，使用一个混合模型（mixture model）学习每个细胞中每个基因存在缺失的概率。
+\item 接着，插补很大概率为缺失值的基因。首先将基因分为较大程度受到缺失影响的集合$A_j$和没有受到缺失值较大影响的集合$B_j$，然后根据$B_j$的基因首先做主成分分析，找到解释性较大的几个主成分，利用这几个主成分的矩阵对样本进行聚类。
+\item 根据聚类结果，可以将样本分为有较高可能有缺失值和较高可能性表达值正常测定的两类，对表达值正常的样本进行线性回归，并将权重用于较高可能缺失的样本上，就完成了对缺失值的插补。
+\end{itemize}
 
 \subsection{样本库大小归一化}
 
@@ -316,7 +308,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 使用DESeq2对原始的基因计数矩阵进行分析，可以得到如图~\ref{fig:lulab_de}和图~\ref{fig:scirep_de}的结果。
 
 
-对于~\ref{fig:lulab_de}，我们使用S-cfRNA-seq数据，癌症类型分别为肝癌和早期肝癌。将其分别与正常样本比较，可以分别找出可以区分正常样本与肝癌以及正常样本与早期肝癌的差异基因。(A) 表示每个基因的对数fold change和对数调整后p值的火山图，图中红色的点为差异表达的基因，越靠近右上和左上的基因其差异表达越明显; (B) 前十个差异表达基因的fold change, 表达值以及对数调整后p值; (C) 挑选出的差异表达基因的热图以显示其对于癌症和正常样本的分类效果。的分类效果。
+对于~\ref{fig:lulab_de}，我们使用S-cfRNA-seq数据，癌症类型分别为肝癌和早期肝癌。将其分别与正常样本比较，可以分别找出可以区分正常样本与肝癌以及正常样本与早期肝癌的差异基因。(A) 表示每个基因的对数fold change和对数调整后p值的火山图，图中红色的点为差异表达的基因，越靠近右上和左上的基因其差异表达越明显; (B) 前十个差异表达基因的fold change, 表达值以及对数调整后p值; (C) 挑选出的差异表达基因的热图以显示其对于癌症和正常样本的分类效果。
 \begin{figure}[H] % use float package if you want it here
     \centering
     \includegraphics[width = 0.8\textwidth]{lulab_de}
@@ -393,7 +385,7 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 
 类似地可以得到多分类的逻辑斯谛回归如公式~\ref{equ:multilogistic}。当逻辑斯蒂回归模型获得数据输入，进行了训练后，为了最大化分类正确的概率，模型会内部优化出$\beta_0, \beta$的最优值，通过寻找$| \beta |$最大的那些值，即可找到我们希望寻找的，对于分类最有效的特征。
 
-
+ 
 \begin{subequations}\label{equ:multilogistic}
 \begin{flalign}
     & P ( Y = k | X = x ) = \frac { \exp \left( \beta _ { k , 0 } + x ^ { T } \beta _ { k } \right) } { 1 + \sum _ { l = 1 } ^ { K - 1 } \exp \left( \beta _ { l , 0 } + x ^ { T } \beta _ { l } \right) } , \text { for } k = 1 , \ldots , K - 1\\ 
@@ -405,73 +397,10 @@ DESeq2为了比较两组样本之间的计数差异建立了一个模型。该�
 
 \subsection{特征选择的分类效果和稳健性评估}
 
-Kuncheva index公式如式~(\ref{eq:ki}），其中 $f_i, f_j$ 为两次挑选的特征，$d, N$ 分别为一次挑选的特征数和总特征数量。
-\begin{equation}\label{eq:ki}
-\mathrm { KI } \left( f _ { i } , f _ { j } \right) = \frac { \left| f _ { i } \cap f _ { j } \right| N - d ^ { 2 } }{ d N - d ^ { 2 } } = \frac { \left| f _ { i } \cap f _ { j } \right| - d ^ { 2 } / N } { d - d ^ { 2 } / N }
-\end{equation}
+\paragraph{分类效果衡量指标AUC}
+为了衡量模型的分类效果，我们使用了曲线下面积（Area Under Curve, AUC）来衡量其分类效果，AUC是一个0-1之间的数字，对于二分类模型，完全随机分类的AUC为0.5，完全区分两类样本时的AUC为1，AUC越大代表分类效果越好。
 
-若做K次采样，均采取不放回的策略时，可以获得平均KI的公式如式~(\ref{eq:aki}），即AKI。
-
-\begin{equation}\label{eq:aki}
-\mathrm { AKI } = \frac { 2 } { M ( M - 1 ) } \sum _ { i = 1 } ^ { M } \sum _ { j = 1 } ^ { M } \mathrm { KI } \left( f _ { i } , f _ { j } \right)
-\end{equation}
-
-
-\subsection{模型分类效果比较总结}
-
-图~\ref{fig:feature_selection_compare}
-\begin{figure}[h]
-  \centering%
-  \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=4cm]{feature_selection_erro_hcc_fig4a}
-    \caption{结肠癌数据特征选择方法总结}
-  \end{subfigure}%
-  \hspace{4em}%
-  \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=4cm]{feature_selection_erro_hcc_fig4b}
-    \caption{肝癌数据特征选择方法总结}
-  \end{subfigure}
-  \caption{特征选择方法总结}
-  \label{fig:feature_selection_compare}
-\end{figure}
-
-图~\ref{fig:hcc_crc_auc_sum}汇总了S-cfRNA-seq和S-exoRNA-seq两套数据的肝癌(HCC和结肠癌(CRC)两种疾病不同生物标志物作为特征的分类效果。
-\begin{figure}[h]
-  \centering%
-  \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=5cm]{hcc_auc_sum_revise_fig4b_5}
-    \caption{肝癌各生物标志物AUC总结}
-  \end{subfigure}%
-  \hspace{4em}%
-  \begin{subfigure}{0.4\textwidth}
-    \includegraphics[height=5cm]{crc_auc_sum_revise_fig4b_5}
-    \caption{结肠癌各生物标志物AUC总结}
-  \end{subfigure}
-  \caption{肝癌和结肠癌AUC总结}
-  \label{fig:hcc_crc_auc_sum}
-\end{figure}
-
-~\ref{fig:compare_feature_num}
-\begin{figure}[H] % use float package if you want it here
-    \centering
-    \includegraphics[width = 0.8\textwidth]{compare_feature_num}
-    \caption{挑选不同数量feature时AUC的变化}
-    \label{fig:compare_feature_num}
-\end{figure}
-
-
-\subsection{挑选出的候选生物标志物表现}
-%ROC clustermap等
-
-~\ref{fig:roc_curve}
-\begin{figure}[H] % use float package if you want it here
-    \centering
-    \includegraphics[width = 0.4\textwidth]{roc_curve}
-    \caption{早期肝癌分类的ROC曲线}
-    \label{fig:roc_curve}
-\end{figure}
-
-表~\ref{tab:confusion_mx}
+对于样本的预测，我们使用医学和生物领域常用的混淆矩阵来计算其相应的指标，并进一步获得AUC的值。首先我们使用如表~\ref{tab:confusion_mx}所示的混淆矩阵来计算真阳性（True Positive Rate, TPR）和伪阳性（False Positive Rate, FPR），其中真阳性率也被称为灵敏度（Sensitivity），伪阳性率与特异度（Specificity）的关系为$1 - \text{FPR} = \text{Specificity}$。由于机器学习模型可以预测出每个样本分别属于两类别（癌症和正常人）的概率，因此对每个样本的二分类预测概率，选取一系列的截断值（cutoff），就可以用于构建多个混淆矩阵，并计算出每一个混淆矩阵的TPR和FPR值。将同一模型每个阈值的 (FPR, TPR) 座标都画在ROC空间里，就可以生成特定模型的ROC曲线（~\cite{roc_curve}）。ROC曲线在完全随机预测时就是$y=x, x \in [0,1]$的直线，ROC曲线下围的面积就是AUC，AUC越接近1代表分类效果越好。
 
 \begin{table}[htbp]
   \centering
@@ -488,12 +417,132 @@ Kuncheva index公式如式~(\ref{eq:ki}），其中 $f_i, f_j$ 为两次挑选�
 \end{minipage}
 \end{table}
 
-~\ref{fig:candidate_sum}
+
+\paragraph{特征稳定性衡量指标KI}
+挑选出重复性强的稳定的特征在液体活检领域非常重要，在不同测试轮数中重复出现的特征不仅对分类很重要，而且可能具有泛化能力强的特点。为了衡量挑选的特征的稳定性，我们使用了Kuncheva index (KI)来衡量特征的稳定性，
+其公式如式~(\ref{eq:ki}），其中 $f_i, f_j$ 为两次挑选的特征，$d, N$ 分别为一次挑选的特征数和总特征数量。
+\begin{equation}\label{eq:ki}
+\mathrm { KI } \left( f _ { i } , f _ { j } \right) = \frac { \left| f _ { i } \cap f _ { j } \right| N - d ^ { 2 } }{ d N - d ^ { 2 } } = \frac { \left| f _ { i } \cap f _ { j } \right| - d ^ { 2 } / N } { d - d ^ { 2 } / N }
+\end{equation}
+
+若做K次采样，均采取不放回的策略时，可以获得平均KI的公式如式~(\ref{eq:aki}），即AKI。
+
+\begin{equation}\label{eq:aki}
+\mathrm { AKI } = \frac { 2 } { M ( M - 1 ) } \sum _ { i = 1 } ^ { M } \sum _ { j = 1 } ^ { M } \mathrm { KI } \left( f _ { i } , f _ { j } \right)
+\end{equation}
+
+KI和AKI同样为0-1之间的值，其值越接近1则代表特征越稳定，AKI为1时代表多轮测试中挑选出的权重最大的特征完全一致，这是最理想的情况。
+
+
+\subsection{模型分类效果比较总结}
+
+为了更好的比较exSEEK挑选出的生物标志物和已知的一些经典的生物标志物，我们总结了各类生物标志物和exSEEK挑选出的特征的AUC用以比较，我们首先注意到如
+图~\ref{fig:compare_feature_num}所示，在挑选10个以下的特征时，特征的数量变化并不会造成AUC的剧烈变动，挑选6-7个甚至更少的特征也可以取得很好的分类效果。
 \begin{figure}[H] % use float package if you want it here
     \centering
-    \includegraphics[width = 1\textwidth]{candidate_sum}
-    \caption{综合评估挑选的生物标志物}
-    \label{fig:candidate_sum}
+    \includegraphics[width = 0.8\textwidth]{compare_feature_num}
+    \caption{挑选不同数量feature时AUC的变化}
+    \label{fig:compare_feature_num}
+\end{figure}
+
+
+表~\ref{fig:table_auc}分别总结了结肠癌和肝癌的不同已知生物标志物和exSEEK挑出的生物标志物的AUC总结。
+其中第一行的CRC/HD, CRC\_S1/HD, HCC/HD, HCC\_S1/HD分别代表结肠癌和正常人，结肠癌早期和正常人，肝癌和正常人，肝癌早期和正常人的比较。
+第二行的Mean，std\_dev和rounds分别代表测试的AUC的均值，标准差和测试轮数。第一列的methods表示该marker是使用原始文献的参数还是使用exSEEK优化得到的参数进行分类。
+第二列代表选择的生物标志物，标志物名称的括号中的数字表示其使用的基因的数量。每个表格的前两个标志物(miR-20, miRNA6; miR-21, miRNA7)为已知的生物标志物，使用其原始文献中的参数进行测试。
+miRNA6, miRNA7还通过exSEEK进行了重新优化，其结果得到了显著提升。ncRNA和miRNA\_only分别代表exSEEK发现的非编码RNA生物标志物组合以及仅包含miRNA的生物标志物组合。
+
+
+\begin{figure}[h]
+  \centering%
+  \begin{subfigure}{0.6\textwidth}
+    \includegraphics[height=3cm]{hcc_bio_table}
+    \caption{结肠癌各生物标志物AUC指标统计表}
+  \end{subfigure}%
+  \hspace{4em}%
+  \begin{subfigure}{0.6\textwidth}
+    \includegraphics[height=3cm]{crc_bio_table}
+    \caption{肝癌各生物标志物AUC指标统计表}
+  \end{subfigure}
+  \caption{特征选择方法总结}
+  \label{fig:table_auc}
+\end{figure}
+
+图~\ref{fig:hcc_crc_auc_sum}汇总了表~\ref{fig:table_auc}的具体结果，以条形图加以展示。使用exSEEK，我们比较了已知的生物标志物和由exSEEK优化或挑选出的生物标志物的分类结果。可以看到由exSEEK挑选的ncRNA取得了最好的分类效果，而经过exSEEK优化的已知的生物标志物（第三栏）比该标志物原始参数设定下（第二栏）的分类结果获得了一定的提升。
+\begin{figure}[h]
+  \centering%
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[height=5cm]{hcc_auc_sum_revise_fig4b_5_commer}
+    \caption{肝癌各生物标志物AUC总结}
+  \end{subfigure}%
+  \hspace{4em}%
+  \begin{subfigure}{0.4\textwidth}
+    \includegraphics[height=5cm]{crc_auc_sum_revise_fig4b_5_commer}
+    \caption{结肠癌各生物标志物AUC总结}
+  \end{subfigure}
+  \caption{肝癌和结肠癌AUC总结}
+  \label{fig:hcc_crc_auc_sum}
+\end{figure}
+
+
+
+\paragraph{各类癌症在各个数据上的AUC汇总}
+最后，除了结肠癌和肝癌，我们也在前列腺癌（PRAD）以及胰腺癌（PAAD）上对癌症和正常人进行了分类。通过五十轮交叉验证，我们可以得到对每个样本的归属概率的多轮预测值的平均。对于模型预测值大于0.5的样本，我们认为其为癌症，小于0.5的样本被归类为正常人，可以得到各个数据集上相关癌症的每个样本的预测概率值箱线如图~\ref{fig:commercial_probs}。
+
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 0.8\textwidth]{commercial_probs}
+  \caption{每个样本多轮交叉验证的预测概率箱线图}
+  \label{fig:commercial_probs}
+\end{figure}
+
+对于图~\ref{fig:commercial_probs}的结果，使用上述获得ROC曲线的方法，可以再计算出相应的曲线下面积AUC，绘制所有类型的癌症各自的分类指标AUC如图~\ref{fig:auc_bar_fig4c}。
+
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 0.8\textwidth]{auc_bar_fig4c}
+  \caption{每个样本多轮交叉验证的AUC汇总}
+  \label{fig:auc_bar_fig4c}
+\end{figure}
+
+
+
+
+
+
+\subsection{挑选出的候选生物标志物表现}
+%ROC clustermap等
+
+
+我们使用exSEEK对各生物标志物进行分类测试，测试方法如前文特征选择算法所述，使用50轮随机抽样，获得对每个样本的二分类预测概率，选取一系列的截断值（cutoff）用于构建混淆矩阵，并计算出每一轮的一系列TPR和FPR值。为了更好地展示每种生物标志物的分类效果，我们绘制了如图~\ref{fig:roc_curve}所示的ROC曲线，由于样本较少，相应的可用截断值也就较少，为了更好地绘制ROC曲线，我们还对曲线进行了线性插值，使其尽量光滑。ROC曲线所包围的面积（曲线下面积，AUC）越大，则说明该模型/特征的分类效果越好。
+
+\begin{figure}[H] % use float package if you want it here
+    \centering
+    \includegraphics[width = 0.8\textwidth]{ROC}
+    \caption{早期肝癌和结肠癌分类的ROC曲线}
+    \label{fig:roc_curve}
+\end{figure}
+
+
+
+使用exSEEK，我们比较了已知的生物标志物和由exSEEK优化或挑选出的生物标志物在早期癌症上分类结果的ROC曲线。
+
+对于HCC\_S1/Normal, 已知生物标志物miRNA7原始的AUC为0.464，由exSEEK优化后可以达到0.989。已知生物标志物miR-21的AUC为0.467，exSEEK只挑选miRNA作为生物标志物的AUC为0.951。candidate表示exSEEK挑选的7个非编码RNA生物标志物，其AUC为0.991，灵敏度为0.89，特异性为0.89，精度为0.99。
+
+对于CRC\_S1/Normal, 已知生物标志物miRNA6原始的AUC为0.575，由exSEEK优化后可以达到0.641。已知生物标志物miR-20的AUC为0.645，exSEEK只挑选miRNA作为生物标志物的AUC为0.603。candidate表示exSEEK挑选的6个非编码RNA生物标志物，其AUC为0.731，灵敏度为0.49，特异性为0.79，精度为0.59。
+
+
+
+
+\paragraph{评估挑选的生物标志物}
+对于挑选出的特征，我们还可以做进一步做如图~\ref{fig:candidate_sum}的综合评估，包括使用热图（heatmap）衡量其分类效果，可以看到使用exSEEK选取的特征可以很好的区分正常和癌症样本，且选取的基因包含lncRNA，snoRNA等非编码RNA。同时我们使用了右图来分析挑选出的基因的一些特性。如散点图的x轴的数值代表其在分类模型中的权重。如图所示，权重绝对值越大则说明其对模型的分类贡献越大。同时点的大小代表该基因的表达值，以CPM（counts per million）表示。
+其颜色的深浅代表特征在五十轮测试中出现的频率，颜色越深，则频率越接近1，证明该特征越稳定出现。可以看到SNORA2C既是对分类贡献最大的特征，也是相对比较稳定出现的特征。红色的条形图中的x轴则表示差异表达分析中每个特征的fold change，颜色深浅代表其负对数FDR值。
+
+\begin{figure}[H] % use float package if you want it here
+  \centering
+  \includegraphics[width = 1\textwidth]{candidate_sum}
+  \caption{综合评估挑选的生物标志物}
+  \label{fig:candidate_sum}
 \end{figure}
 
 \section{exSEEK软件介绍及使用}
@@ -543,7 +592,8 @@ exSEEK软件还包含有高度可交互以及高度标准化的绘图模块
 ，如图~\ref{fig:jupyter}所示，我们使用jupyter$-$notebook
 （\cite{kluyver2016jupyter}）进行绘图模块的构建，
 用户可以交互式地使用绘图模块完成高质量的结果可视化，只
-需要选择相应的参数即可自动地产生类似本文配图的输出结果图。
+需要选择相应的参数即可自动地产生类似本文配图的输出结果图。使用可交互式的绘图方式，使得我们可以尽可能地隐藏代码细节，尤其适合用户测试了多套数据，不同的测序方法，以及配合本工具的多种matrix processing以及feature selection方法的组合。
+我们针对python绘图比较粗糙的特点，专门配置了符合出版物绘图规范的绘图函数，使得exSEEK工具产生的图片都符合标准的绘图要求。
 
 \begin{figure}[H] % use float package if you want it here
     \centering
@@ -551,4 +601,3 @@ exSEEK软件还包含有高度可交互以及高度标准化的绘图模块
     \caption{exSEEK绘图模块}
     \label{fig:jupyter}
 \end{figure}
-
